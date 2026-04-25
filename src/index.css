@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #f5efe6;
+  --color-surface: #faf7f2;
+  --color-wood: #d4c4a8;
+  --color-wood-dark: #b8a88c;
+  --color-moss: #5b7b5a;
+  --color-moss-light: #8ba88a;
+  --color-moss-pale: #dce8da;
+  --color-ember: #d4733a;
+  --color-ember-light: #e8a87c;
+  --color-ember-pale: #f5dcc8;
+  --color-gold: #d4a84b;
+  --color-gold-light: #e8d098;
+  --color-gold-pale: #f5edd4;
+  --color-dust: #c4a882;
+  --color-violet: #5b4a6b;
+  --color-ink: #2c2418;
+  --color-ink-secondary: #7a6d5e;
+  --color-ink-muted: #b0a090;
+  --color-success: #5b7b5a;
+  --color-danger: #c45a4a;
+  --color-warning: #d4a84b;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", monospace;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-wood); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-wood-dark); }
+
+/* Drag and drop */
+.dragging { opacity: 0.5; }
+.drag-over { outline: 2px dashed var(--color-moss); outline-offset: -2px; background: var(--color-moss-pale) !important; }
