@@ -40,7 +40,7 @@ export function ItemCard({ item, canEdit, spaceName, onEdit, onDelete }: ItemCar
     <div
       ref={setNodeRef}
       style={{ ...style, borderLeftColor: CAT_COLORS[item.category] || CAT_COLORS.other, opacity: isDragging ? 0.5 : 1 }}
-      className="bg-card glass-card rounded-md px-3 py-2.5 mb-1.5 shadow-glow-purple/10 text-xs border-l-[3px] cursor-grab relative group hover:shadow-glow-purple/15 transition-shadow"
+      className="bg-card glass-card rounded-md px-3 py-2.5 mb-1.5 shadow-glow-purple/10 text-xs border-l-[3px] cursor-grab relative group hover:wobble transition-shadow"
     >
       <div className="flex items-start gap-1">
         <button {...attributes} {...listeners} className="mt-0.5 text-text-muted cursor-grab shrink-0">
