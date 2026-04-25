@@ -105,7 +105,7 @@ export function InventoryView() {
               <div
                 key={status}
                 id={status}
-                className="bg-surface/50 rounded-lg p-3 min-h-32 border border-border-glow"
+                className="bg-surface/50 rounded-lg p-3 min-h-32 border animate-border"
               >
                 <h3 className="text-xs font-semibold text-text-secondary mb-2 flex items-center justify-between">
                   {STATUS_LABELS[status]}

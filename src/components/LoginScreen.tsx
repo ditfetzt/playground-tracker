@@ -24,12 +24,17 @@ export function LoginScreen() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <motion.div
-        className="glass-card rounded-2xl p-12 max-w-sm w-full text-center"
+        className="glass-card-intense rounded-2xl p-12 max-w-sm w-full text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold mb-1">🏕️ The Playground</h1>
+        <div className="relative">
+          <div className="sparkle-dot" style={{top: -10, right: -10}} />
+          <div className="sparkle-dot" style={{bottom: -10, left: -10, animationDelay: '1s'}} />
+          <div className="sparkle-dot" style={{top: '50%', right: -15, animationDelay: '0.5s'}} />
+          <h1 className="text-3xl font-bold mb-1 rainbow-text">🏕️ The Playground</h1>
+        </div>
         <div className="inline-block px-3 py-1 rounded-full glow-badge text-text-secondary text-xs font-semibold mb-5">
           Otherworld 2026
         </div>

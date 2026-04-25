@@ -6,9 +6,9 @@ export function Header() {
   const { profile, logout } = useAuth()
 
   return (
-    <header className="flex items-center gap-4 flex-wrap bg-card glass-card rounded-xl px-6 py-4 shadow-glow-purple/10 mb-3">
+    <header className="flex items-center gap-4 flex-wrap glass-card-intense rounded-xl px-6 py-4 mb-3">
       <div className="flex items-center gap-3">
-        <h1 className="text-xl font-bold flex items-center gap-2">
+        <h1 className="text-xl font-bold flex items-center gap-2 rainbow-text">
           🏕️ The Playground
           <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full glow-badge text-text-secondary tracking-wide">
             OW 2026

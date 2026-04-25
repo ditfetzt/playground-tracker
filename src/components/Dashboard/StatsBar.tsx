@@ -28,7 +28,7 @@ export function StatsBar() {
         >
           <stat.icon size={22} className="text-text-muted shrink-0" />
           <div>
-            <div className="text-xl font-bold leading-tight tabular-nums">{stat.value}</div>
+            <div className="text-xl font-bold leading-tight tabular-nums stat-glow">{stat.value}</div>
             <div className="text-xs text-text-secondary">{stat.label}</div>
           </div>
         </motion.div>

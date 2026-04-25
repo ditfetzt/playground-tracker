@@ -13,7 +13,7 @@ export function MoistureGauge() {
   return (
     <div className="flex items-center gap-3">
       <span className="text-xs font-semibold text-text-secondary whitespace-nowrap">Moisture</span>
-      <div className="w-32 h-2.5 bg-border-glow/30 rounded-full overflow-hidden">
+      <div className="w-32 h-2.5 moisture-bar rounded-full overflow-hidden">
         <motion.div
           className="h-full rounded-full"
           style={{ background: 'linear-gradient(90deg, #ff2d95, #ffd700, #39ff8c)' }}

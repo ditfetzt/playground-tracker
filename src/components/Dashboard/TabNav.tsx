@@ -28,9 +28,9 @@ export function TabNav({ active, onChange }: TabNavProps) {
           key={tab.id}
           onClick={() => onChange(tab.id)}
           className={`flex items-center gap-1.5 px-3.5 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${
-            active === tab.id
-              ? 'bg-deep text-text'
-              : 'text-text-secondary hover:bg-card-hover/50 hover:text-text'
+              active === tab.id
+                ? 'tab-active text-text'
+                : 'text-text-secondary hover:bg-card-hover/50 hover:text-text'
           }`}
         >
           <tab.icon size={15} />
