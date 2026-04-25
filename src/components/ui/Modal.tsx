@@ -25,16 +25,16 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-deep/70 backdrop-blur-sm" onClick={onClose} />
           <motion.div
-            className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-lg"
+            className="relative w-full max-w-lg rounded-2xl bg-card glass-card p-6 shadow-glow-purple/20"
             initial={{ scale: 0.95, y: 10 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.95, y: 10 }}
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">{title}</h2>
-              <button onClick={onClose} className="p-1 rounded-md hover:bg-surface text-ink-secondary">
+              <button onClick={onClose} className="p-1 rounded-md hover:bg-card-hover/50 text-text-secondary">
                 <X size={18} />
               </button>
             </div>

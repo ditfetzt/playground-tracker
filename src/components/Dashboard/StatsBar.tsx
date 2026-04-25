@@ -11,9 +11,9 @@ export function StatsBar() {
   const hours = data.volunteerHours.reduce((s, v) => s + Number(v.hours), 0)
 
   const stats = [
-    { icon: Package, label: 'Items acquired', value: `${done}/${total}`, color: 'text-moss' },
-    { icon: DollarSign, label: 'Remaining budget', value: `$${Math.max(0, income - expense).toFixed(0)}`, color: 'text-ink' },
-    { icon: Timer, label: 'Volunteer hours', value: `${hours.toFixed(1)}h`, color: 'text-ink' },
+    { icon: Package, label: 'Items acquired', value: `${done}/${total}`, color: 'text-glow-green' },
+    { icon: DollarSign, label: 'Remaining budget', value: `$${Math.max(0, income - expense).toFixed(0)}`, color: 'text-text' },
+    { icon: Timer, label: 'Volunteer hours', value: `${hours.toFixed(1)}h`, color: 'text-text' },
   ]
 
   return (
@@ -21,15 +21,15 @@ export function StatsBar() {
       {stats.map((stat, i) => (
         <motion.div
           key={stat.label}
-          className="bg-white rounded-lg px-4 py-2.5 shadow-sm flex items-center gap-3"
+          className="bg-card glass-card rounded-lg px-4 py-2.5 shadow-glow-purple/10 flex items-center gap-3"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.08 }}
         >
-          <stat.icon size={22} className="text-ink-muted shrink-0" />
+          <stat.icon size={22} className="text-text-muted shrink-0" />
           <div>
             <div className="text-xl font-bold leading-tight tabular-nums">{stat.value}</div>
-            <div className="text-xs text-ink-secondary">{stat.label}</div>
+            <div className="text-xs text-text-secondary">{stat.label}</div>
           </div>
         </motion.div>
       ))}

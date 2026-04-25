@@ -40,21 +40,25 @@ function Dashboard() {
 
 function AppInner() {
   return (
-    <CampProvider>
-      <Dashboard />
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: '#fffdfa',
-            border: '1px solid #d4c4a8',
-            color: '#2c2418',
-            fontSize: '13px',
-            fontFamily: '"DM Sans", system-ui, sans-serif',
-          },
-        }}
-      />
-    </CampProvider>
+    <div className="relative min-h-screen">
+      <div className="bg-aurora" />
+      <CampProvider>
+        <Dashboard />
+        <Toaster
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: 'rgba(25, 15, 45, 0.95)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(180, 77, 255, 0.3)',
+              color: '#f0e6ff',
+              fontSize: '13px',
+              fontFamily: '"DM Sans", system-ui, sans-serif',
+            },
+          }}
+        />
+      </CampProvider>
+    </div>
   )
 }
 

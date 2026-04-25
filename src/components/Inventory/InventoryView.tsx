@@ -83,7 +83,7 @@ export function InventoryView() {
     <div>
       <div className="section-header flex items-center justify-between mb-4">
         <h2 className="text-lg font-bold">📦 Inventory</h2>
-        <button onClick={openNew} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-moss text-white text-sm font-semibold hover:bg-moss-light transition-colors">
+        <button onClick={openNew} className="flex items-center gap-1.5 px-4 py-2 rounded-lg btn-primary text-white text-sm font-semibold">
           <Plus size={15} /> Add Item
         </button>
       </div>
@@ -105,11 +105,11 @@ export function InventoryView() {
               <div
                 key={status}
                 id={status}
-                className="bg-surface rounded-lg p-3 min-h-32 border border-wood"
+                className="bg-surface/50 rounded-lg p-3 min-h-32 border border-border-glow"
               >
-                <h3 className="text-xs font-semibold text-ink-secondary mb-2 flex items-center justify-between">
+                <h3 className="text-xs font-semibold text-text-secondary mb-2 flex items-center justify-between">
                   {STATUS_LABELS[status]}
-                  <span className="text-xs bg-wood px-1.5 py-0.5 rounded-full">{items.length}</span>
+                  <span className="text-xs bg-border-glow/30 px-1.5 py-0.5 rounded-full">{items.length}</span>
                 </h3>
                 <AnimatePresence>
                   {items.map(item => (
@@ -131,7 +131,7 @@ export function InventoryView() {
                   ))}
                 </AnimatePresence>
                 {items.length === 0 && (
-                  <div className="text-xs text-ink-muted text-center py-6">Drop items here</div>
+                  <div className="text-xs text-text-muted text-center py-6">Drop items here</div>
                 )}
               </div>
             )

@@ -6,11 +6,11 @@ export function Header() {
   const { profile, logout } = useAuth()
 
   return (
-    <header className="flex items-center gap-4 flex-wrap bg-white rounded-xl px-6 py-4 shadow-sm mb-3">
+    <header className="flex items-center gap-4 flex-wrap bg-card glass-card rounded-xl px-6 py-4 shadow-glow-purple/10 mb-3">
       <div className="flex items-center gap-3">
         <h1 className="text-xl font-bold flex items-center gap-2">
           🏕️ The Playground
-          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gold-pale text-ink-secondary tracking-wide">
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full glow-badge text-text-secondary tracking-wide">
             OW 2026
           </span>
         </h1>
@@ -24,7 +24,7 @@ export function Header() {
           <span>{profile.name}</span>
           <button
             onClick={logout}
-            className="ml-1 p-1.5 rounded-md border border-wood hover:border-danger hover:text-danger text-ink-secondary transition-colors"
+            className="ml-1 p-1.5 rounded-md border border-border-glow hover:border-glow-ember hover:text-glow-ember text-text-secondary transition-colors"
             title="Log out"
           >
             <LogOut size={14} />

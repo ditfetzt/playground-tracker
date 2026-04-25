@@ -10,7 +10,7 @@ export function Select({ value, onChange, options, placeholder }: SelectProps) {
     <select
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="px-3 py-1.5 text-sm border border-wood rounded-lg bg-white outline-none focus:border-moss"
+      className="px-3 py-1.5 text-sm border border-border-glow rounded-lg bg-card glass-card outline-none focus:border-moss"
     >
       {placeholder && <option value="">{placeholder}</option>}
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}

@@ -40,25 +40,25 @@ export function ItemCard({ item, canEdit, spaceName, onEdit, onDelete }: ItemCar
     <div
       ref={setNodeRef}
       style={{ ...style, borderLeftColor: CAT_COLORS[item.category] || CAT_COLORS.other, opacity: isDragging ? 0.5 : 1 }}
-      className="bg-white rounded-md px-3 py-2.5 mb-1.5 shadow-sm text-xs border-l-[3px] cursor-grab relative group hover:shadow-md transition-shadow"
+      className="bg-card glass-card rounded-md px-3 py-2.5 mb-1.5 shadow-glow-purple/10 text-xs border-l-[3px] cursor-grab relative group hover:shadow-glow-purple/15 transition-shadow"
     >
       <div className="flex items-start gap-1">
-        <button {...attributes} {...listeners} className="mt-0.5 text-ink-muted cursor-grab shrink-0">
+        <button {...attributes} {...listeners} className="mt-0.5 text-text-muted cursor-grab shrink-0">
           <GripVertical size={12} />
         </button>
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-sm mb-0.5 truncate">
             {SOURCE_ICONS[item.sourcing || ''] || ''} {item.name}
           </div>
-          <div className="flex flex-wrap gap-1.5 text-ink-secondary">
-            <span className="text-[10px] font-semibold uppercase px-1 py-0.5 rounded bg-surface">{item.category}</span>
+          <div className="flex flex-wrap gap-1.5 text-text-secondary">
+            <span className="text-[10px] font-semibold uppercase px-1 py-0.5 rounded bg-surface/50">{item.category}</span>
             {meta.map((m, i) => <span key={i} className="truncate">{m}</span>)}
           </div>
         </div>
         {canEdit && (
           <div className="flex gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button onClick={onEdit} className="p-1 rounded hover:bg-surface text-ink-muted"><Pencil size={12} /></button>
-            <button onClick={onDelete} className="p-1 rounded hover:bg-ember-pale text-ink-muted hover:text-danger"><Trash2 size={12} /></button>
+            <button onClick={onEdit} className="p-1 rounded hover:bg-card-hover/50 text-text-muted"><Pencil size={12} /></button>
+            <button onClick={onDelete} className="p-1 rounded hover:bg-glow-ember/15 text-text-muted hover:text-glow-ember"><Trash2 size={12} /></button>
           </div>
         )}
       </div>

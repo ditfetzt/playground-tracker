@@ -22,15 +22,15 @@ interface TabNavProps {
 
 export function TabNav({ active, onChange }: TabNavProps) {
   return (
-    <nav className="flex gap-1 bg-white rounded-lg p-1 shadow-sm mb-4 overflow-x-auto">
+    <nav className="flex gap-1 bg-card glass-card rounded-lg p-1 shadow-glow-purple/10 mb-4 overflow-x-auto">
       {TABS.map(tab => (
         <button
           key={tab.id}
           onClick={() => onChange(tab.id)}
           className={`flex items-center gap-1.5 px-3.5 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${
             active === tab.id
-              ? 'bg-canvas text-ink'
-              : 'text-ink-secondary hover:bg-surface hover:text-ink'
+              ? 'bg-deep text-text'
+              : 'text-text-secondary hover:bg-card-hover/50 hover:text-text'
           }`}
         >
           <tab.icon size={15} />
