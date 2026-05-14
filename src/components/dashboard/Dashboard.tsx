@@ -353,6 +353,8 @@ export function Dashboard() {
   const { profile, isAdmin } = useAuth()
   const { refresh } = useCamp()
 
+  console.log('[Dashboard] TourProvider profileId:', profile?.id, 'has onTracked:', !!refresh)
+
   return (
     <TourProvider
       isAdmin={isAdmin}

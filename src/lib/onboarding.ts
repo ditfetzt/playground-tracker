@@ -16,29 +16,50 @@ export function resetOnboarding() {
 
 export async function trackOnboardingDismissed(profileId: string) {
   localStorage.setItem(DISMISSED_KEY, 'true')
-  const { error } = await supabase
+  console.log('[trackOnboardingDismissed] profileId:', profileId)
+  const { data, error } = await supabase
     .from('profiles')
     .update({ onboarding_dismissed_at: new Date().toISOString() })
     .eq('id', profileId)
-  if (error) console.error('[trackOnboardingDismissed]', error)
+    .select()
+  if (error) {
+    console.error('[trackOnboardingDismissed] error:', error.message, error.details, error.hint)
+  } else if (!data || data.length === 0) {
+    console.warn('[trackOnboardingDismissed] no rows matched — profileId may be wrong or table inaccessible')
+  } else {
+    console.log('[trackOnboardingDismissed] success, updated:', data[0]?.name)
+  }
 }
 
 export async function trackOnboardingCompleted(profileId: string) {
-  const { error } = await supabase
+  console.log('[trackOnboardingCompleted] profileId:', profileId)
+  const { data, error } = await supabase
     .from('profiles')
     .update({ onboarding_completed_at: new Date().toISOString() })
     .eq('id', profileId)
-  if (error) console.error('[trackOnboardingCompleted]', error)
+    .select()
+  if (error) {
+    console.error('[trackOnboardingCompleted] error:', error.message, error.details, error.hint)
+  } else if (!data || data.length === 0) {
+    console.warn('[trackOnboardingCompleted] no rows matched — profileId may be wrong or table inaccessible')
+  } else {
+    console.log('[trackOnboardingCompleted] success, updated:', data[0]?.name)
+  }
 }
 
 export async function resetOnboardingForAll(profileId: string) {
   localStorage.removeItem(DISMISSED_KEY)
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('profiles')
     .update({
       onboarding_dismissed_at: null,
       onboarding_completed_at: null,
     })
     .neq('id', profileId)
-  if (error) console.error('[resetOnboardingForAll]', error)
+    .select()
+  if (error) {
+    console.error('[resetOnboardingForAll] error:', error.message, error.details, error.hint)
+  } else {
+    console.log('[resetOnboardingForAll] success, reset', data?.length ?? 0, 'profiles')
+  }
 }

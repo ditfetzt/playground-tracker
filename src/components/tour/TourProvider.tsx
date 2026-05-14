@@ -88,13 +88,17 @@ export function TourProvider({
   }, [])
 
   const dismissTracked = useCallback(async () => {
+    console.log('[TourProvider] dismissTracked, profileId:', profileId)
     await trackOnboardingDismissed(profileId || '')
+    console.log('[TourProvider] calling onTracked refresh')
     onTracked?.()
     dismiss()
   }, [profileId, dismiss, onTracked])
 
   const complete = useCallback(async () => {
+    console.log('[TourProvider] complete, profileId:', profileId)
     await trackOnboardingCompleted(profileId || '')
+    console.log('[TourProvider] calling onTracked refresh')
     onTracked?.()
     dismiss()
   }, [profileId, dismiss, onTracked])
