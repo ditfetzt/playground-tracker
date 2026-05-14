@@ -5,6 +5,12 @@ export interface Profile {
   invite_code: string
   is_admin: boolean
   role_names: string[]
+  fee_paid: boolean
+  active: boolean
+  last_login: string | null
+  bypass_onboarding: boolean
+  onboarding_dismissed_at: string | null
+  onboarding_completed_at: string | null
   created_at: string
 }
 
@@ -27,8 +33,8 @@ export interface Space {
   created_at: string
 }
 
-export type ItemStatus = 'needed' | 'sourcing' | 'acquired' | 'on_site'
-export type SourcingType = 'borrow' | 'buy' | 'already_have'
+export type ItemStatus = 'needed' | 'acquired'
+export type SourcingType = 'buy' | 'borrow'
 export type ItemCategory = 'power' | 'tools' | 'decor' | 'furniture' | 'crafts' | 'props' | 'equipment' | 'other'
 
 export interface InventoryItem {

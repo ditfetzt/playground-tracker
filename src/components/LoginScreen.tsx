@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
-import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
 
 export function LoginScreen() {
   const { login } = useAuth()
@@ -15,54 +16,36 @@ export function LoginScreen() {
     setError('')
     try {
       await login(code.trim())
-    } catch (err: any) {
-      setError(err.message || 'Invalid code')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Invalid code')
     }
     setLoading(false)
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <motion.div
-        className="glass-card-intense rounded-2xl p-12 max-w-sm w-full text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="relative">
-          <div className="sparkle-dot" style={{top: -10, right: -10}} />
-          <div className="sparkle-dot" style={{bottom: -10, left: -10, animationDelay: '1s'}} />
-          <div className="sparkle-dot" style={{top: '50%', right: -15, animationDelay: '0.5s'}} />
-          <h1 className="text-3xl font-bold mb-1 rainbow-text">🏕️ The Playground</h1>
-        </div>
-        <div className="inline-block px-3 py-1 rounded-full glow-badge text-text-secondary text-xs font-semibold mb-5">
-          Otherworld 2026
-        </div>
-        <p className="text-text-secondary text-sm mb-6">Enter your invite code to join</p>
+      <div className="glass-card rounded-2xl p-10 max-w-sm w-full text-center">
+        <h1 className="text-2xl font-bold rainbow-text mb-1">The Playground</h1>
+        <p className="text-[13px] font-bold tracking-widest text-muted-foreground mb-6">OTHERWORLD 2026 — MOIST.</p>
+        <p className="text-sm text-muted-foreground mb-5">Enter your invite code</p>
 
-        <form onSubmit={handleSubmit}>
-          <input
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <Input
             type="text"
             value={code}
             onChange={e => setCode(e.target.value)}
             placeholder="your invite code..."
-            className="w-full px-4 py-3 text-center text-base rounded-lg bg-surface/50"
+            className="text-center"
             autoComplete="off"
             spellCheck={false}
             autoFocus
           />
-          <div className="text-glow-ember text-sm mt-2 min-h-5">{error}</div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full mt-3 py-3 rounded-lg btn-primary text-white font-semibold text-base disabled:opacity-50"
-          >
-            {loading ? 'Checking...' : 'Enter the Playground'}
-          </button>
+          {error && <p className="text-destructive text-sm">{error}</p>}
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? 'Checking...' : 'Enter'}
+          </Button>
         </form>
-
-        <p className="text-text-muted text-xs mt-5">Check your messages from Maxim for your code</p>
-      </motion.div>
+      </div>
     </div>
   )
 }

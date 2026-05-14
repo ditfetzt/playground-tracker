@@ -1,144 +1,112 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react'
 import { supabase } from '../lib/supabase'
-import type { CampData, InventoryItem, FinanceEntry, VolunteerHour, Ticket } from '../lib/types'
+import type { CampData, InventoryItem, Role } from '../lib/types'
 import { useAuth } from './AuthContext'
-
-type TableName = 'roles' | 'inventory_items' | 'finance_entries' | 'spaces' | 'volunteer_hours' | 'tickets' | 'activity_log' | 'profiles'
-
-const ALL_TABLES: { key: keyof CampData; table: TableName }[] = [
-  { key: 'roles', table: 'roles' },
-  { key: 'items', table: 'inventory_items' },
-  { key: 'finances', table: 'finance_entries' },
-  { key: 'spaces', table: 'spaces' },
-  { key: 'volunteerHours', table: 'volunteer_hours' },
-  { key: 'tickets', table: 'tickets' },
-  { key: 'activityLog', table: 'activity_log' },
-  { key: 'profiles', table: 'profiles' },
-]
 
 interface CampContextValue {
   data: CampData
   loading: boolean
   refresh: () => Promise<void>
-  // Mutations
   addItem: (item: Partial<InventoryItem>) => Promise<void>
   updateItem: (id: string, changes: Partial<InventoryItem>) => Promise<void>
   deleteItem: (id: string) => Promise<void>
-  addFinance: (entry: Partial<FinanceEntry>) => Promise<void>
-  deleteFinance: (id: string) => Promise<void>
-  addVolunteerHours: (entry: Partial<VolunteerHour>) => Promise<void>
-  addTicket: (ticket: Partial<Ticket>) => Promise<void>
-  addLog: (message: string, entityType?: string) => Promise<void>
+  updateRole: (id: string, changes: Partial<Role>) => Promise<void>
+  toggleFeePaid: (profileId: string) => Promise<void>
+  addProfile: (name: string, inviteCode: string) => Promise<void>
+  deleteProfile: (id: string) => Promise<void>
 }
 
 const CampContext = createContext<CampContextValue | null>(null)
 
-const INITIAL_DATA: CampData = {
+const EMPTY_DATA: CampData = {
   roles: [], items: [], finances: [], spaces: [],
   volunteerHours: [], tickets: [], activityLog: [], profiles: [],
 }
 
 export function CampProvider({ children }: { children: ReactNode }) {
   const { profile } = useAuth()
-  const [data, setData] = useState<CampData>(INITIAL_DATA)
+  const [data, setData] = useState<CampData>(EMPTY_DATA)
   const [loading, setLoading] = useState(true)
   const channels = useRef<ReturnType<typeof supabase.channel>[]>([])
 
   const refresh = useCallback(async () => {
     if (!profile) return
+    const tables = [
+      { key: 'roles' as const, table: 'roles' as const },
+      { key: 'items' as const, table: 'inventory_items' as const },
+      { key: 'profiles' as const, table: 'profiles' as const },
+    ]
     const results = await Promise.all(
-      ALL_TABLES.map(async ({ table }) => {
+      tables.map(async ({ table }) => {
         const { data } = await supabase.from(table).select('*').order('created_at', { ascending: false })
         return data || []
       })
     )
-    const newData: CampData = {} as CampData
-    ALL_TABLES.forEach(({ key }, i) => {
-      (newData as any)[key] = results[i]
+    setData({
+      ...EMPTY_DATA,
+      roles: results[0] as CampData['roles'],
+      items: results[1] as CampData['items'],
+      profiles: results[2] as CampData['profiles'],
     })
-    setData(newData)
     setLoading(false)
   }, [profile])
 
-  // Set up realtime subscriptions
   useEffect(() => {
     if (!profile) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh()
-
-    // Clean up old channels
     channels.current.forEach(c => supabase.removeChannel(c))
     channels.current = []
-
-    const tables = ALL_TABLES.filter(t => t.table !== 'profiles')
-    tables.forEach(({ table }) => {
+    ;['roles', 'inventory_items', 'profiles'].forEach(table => {
       const channel = supabase
         .channel(`public:${table}`)
-        .on('postgres_changes',
-          { event: '*', schema: 'public', table },
-          () => { refresh() }
-        )
+        .on('postgres_changes', { event: '*', schema: 'public', table }, () => refresh())
         .subscribe()
       channels.current.push(channel)
     })
+    return () => { channels.current.forEach(c => supabase.removeChannel(c)) }
+  }, [profile, refresh])
 
-    return () => {
-      channels.current.forEach(c => supabase.removeChannel(c))
-    }
-  }, [profile])
-
-  // Mutations
   const addItem = useCallback(async (item: Partial<InventoryItem>) => {
     await supabase.from('inventory_items').insert({ ...item, created_by_invite: profile?.invite_code })
-    await addLog(`added "${item.name}" to inventory`, 'inventory')
     await refresh()
-  }, [profile])
+  }, [profile, refresh])
 
   const updateItem = useCallback(async (id: string, changes: Partial<InventoryItem>) => {
     await supabase.from('inventory_items').update(changes).eq('id', id)
     await refresh()
-  }, [])
+  }, [refresh])
 
   const deleteItem = useCallback(async (id: string) => {
-    const item = data.items.find(i => i.id === id)
     await supabase.from('inventory_items').delete().eq('id', id)
-    if (item) await addLog(`removed "${item.name}" from inventory`, 'inventory')
     await refresh()
-  }, [data.items])
+  }, [refresh])
 
-  const addFinance = useCallback(async (entry: Partial<FinanceEntry>) => {
-    await supabase.from('finance_entries').insert({ ...entry, created_by_invite: profile?.invite_code })
-    await addLog(`added ${entry.type}: ${entry.description}`, 'finance')
+  const updateRole = useCallback(async (id: string, changes: Partial<Role>) => {
+    await supabase.from('roles').update(changes).eq('id', id)
     await refresh()
-  }, [profile])
+  }, [refresh])
 
-  const deleteFinance = useCallback(async (id: string) => {
-    await supabase.from('finance_entries').delete().eq('id', id)
+  const toggleFeePaid = useCallback(async (profileId: string) => {
+    const target = data.profiles.find(p => p.id === profileId)
+    if (!target) return
+    await supabase.from('profiles').update({ fee_paid: !target.fee_paid }).eq('id', profileId)
     await refresh()
-  }, [])
+  }, [data.profiles, refresh])
 
-  const addVolunteerHours = useCallback(async (entry: Partial<VolunteerHour>) => {
-    await supabase.from('volunteer_hours').insert(entry)
-    await addLog(`logged ${entry.hours}h volunteer hours`, 'volunteer')
+  const addProfile = useCallback(async (name: string, inviteCode: string) => {
+    await supabase.from('profiles').insert({ name, invite_code: inviteCode, active: true, fee_paid: false, is_admin: false, role_names: [] })
     await refresh()
-  }, [])
+  }, [refresh])
 
-  const addTicket = useCallback(async (ticket: Partial<Ticket>) => {
-    await supabase.from('tickets').insert(ticket)
-    await addLog(`added ${ticket.source} ticket`, 'ticket')
+  const deleteProfile = useCallback(async (id: string) => {
+    await supabase.from('profiles').update({ active: false }).eq('id', id)
     await refresh()
-  }, [])
-
-  const addLog = useCallback(async (message: string, entityType?: string) => {
-    await supabase.from('activity_log').insert({
-      message,
-      entity_type: entityType || null,
-      created_by_invite: profile?.invite_code,
-    })
-    await refresh()
-  }, [profile])
+  }, [refresh])
 
   return (
-    <CampContext.Provider value={{ data, loading, refresh, addItem, updateItem, deleteItem, addFinance, deleteFinance, addVolunteerHours, addTicket, addLog }}>
+    <CampContext.Provider value={{ data, loading, refresh, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, deleteProfile }}>
       {children}
     </CampContext.Provider>
   )

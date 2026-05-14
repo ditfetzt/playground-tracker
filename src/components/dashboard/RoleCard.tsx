@@ -1,0 +1,234 @@
+import { useState, type FormEvent } from 'react'
+import type { Role, InventoryItem, Profile } from '../../lib/types'
+import type { NewItemState } from './AddItemForm'
+import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
+import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
+import { ChevronDown, Plus, Pencil } from 'lucide-react'
+import { ItemRow } from './ItemRow'
+import { AddItemForm } from './AddItemForm'
+import { EmptyState } from './EmptyState'
+import { MemberPicker } from './MemberPicker'
+
+interface RoleCardProps {
+  role: Role
+  items: InventoryItem[]
+  isExpanded: boolean
+  onToggle: () => void
+  canEdit: boolean
+  canEditItem: (item: InventoryItem) => boolean
+  onCycleStatus: (item: InventoryItem) => void
+  onDelete: (id: string) => void
+  addingForRole: string | null
+  onStartAdd: (roleName: string) => void
+  onCancelAdd: () => void
+  onAddItem: (e: FormEvent, roleName: string) => void
+  newItem: NewItemState
+  setNewItem: (item: NewItemState) => void
+  isAdmin: boolean
+  onUpdateRole: (id: string, changes: Partial<Role>) => void
+  onUpdateItem: (id: string, changes: Partial<InventoryItem>) => Promise<void>
+  activeMembers: Profile[]
+  isFirstRole: boolean
+}
+
+export function RoleCard({
+  role,
+  items,
+  isExpanded,
+  onToggle,
+  canEdit,
+  canEditItem,
+  onCycleStatus,
+  onDelete,
+  addingForRole,
+  onStartAdd,
+  onCancelAdd,
+  onAddItem,
+  newItem,
+  setNewItem,
+  isAdmin,
+  onUpdateRole,
+  onUpdateItem,
+  activeMembers,
+  isFirstRole,
+}: RoleCardProps) {
+  const done = items.filter(i => i.status === 'acquired').length
+  const total = items.length
+  const [editingRole, setEditingRole] = useState(false)
+  const [editLead, setEditLead] = useState<string[]>(role.lead ? [role.lead] : [])
+  const [editSupport, setEditSupport] = useState<string[]>(role.key_support || [])
+
+  const handleSaveRole = () => {
+    onUpdateRole(role.id, {
+      lead: editLead[0] || null,
+      key_support: editSupport,
+    })
+    setEditingRole(false)
+  }
+
+  const handleCancelEdit = () => {
+    setEditLead(role.lead ? [role.lead] : [])
+    setEditSupport(role.key_support || [])
+    setEditingRole(false)
+  }
+
+  return (
+    <div className="glass-card p-4">
+      <div className="w-full flex items-start justify-between mb-2 text-left group">
+        <button onClick={onToggle} className="flex-1 text-left">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h2 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+              <span className="mr-1.5">{ROLE_EMOJIS[role.name] || '📋'}</span>
+              {role.name}
+            </h2>
+            <Badge variant={role.type === 'major' ? 'default' : 'secondary'}>{role.type}</Badge>
+          </div>
+
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+            {role.lead && (
+              <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                <span
+                  className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
+                  style={{
+                    width: 16,
+                    height: 16,
+                    backgroundColor: getMemberColor(role.lead) + '20',
+                    color: getMemberColor(role.lead),
+                  }}
+                >
+                  {role.lead.slice(0, 2)}
+                </span>
+                {role.lead}
+              </div>
+            )}
+            {role.key_support?.filter((s: string) => s && !s.match(/^\d/) && !s.toLowerCase().includes('assistant')).map((support: string) => (
+              <div key={support} className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border">
+                <span
+                  className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
+                  style={{
+                    width: 16,
+                    height: 16,
+                    backgroundColor: getMemberColor(support) + '20',
+                    color: getMemberColor(support),
+                  }}
+                >
+                  {support.slice(0, 2)}
+                </span>
+                {support}
+              </div>
+            ))}
+          </div>
+        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          {isAdmin && (
+            <span data-tour-target={isFirstRole ? 'role-edit-btn' : undefined}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (!editingRole) {
+                    setEditLead(role.lead ? [role.lead] : [])
+                    setEditSupport(role.key_support || [])
+                  }
+                  setEditingRole(!editingRole)
+                }}
+                className="p-1 rounded hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                title="Edit role"
+              >
+                <Pencil size={12} />
+              </button>
+            </span>
+          )}
+          {total > 0 && (
+            <span className="text-xs text-muted-foreground font-mono">
+              {done}/{total}
+            </span>
+          )}
+          <button onClick={onToggle} className="p-1">
+            <ChevronDown size={14} className={`text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* Admin role edit form */}
+      {editingRole && (
+        <div className="flex flex-col gap-2 mb-3 p-3 rounded bg-secondary/30 border border-border">
+          <label className="text-[13px] text-muted-foreground uppercase tracking-wide">Lead</label>
+          <MemberPicker
+            mode="single"
+            members={activeMembers}
+            selected={editLead}
+            onChange={setEditLead}
+            exclude={[]}
+            placeholder="Select lead..."
+          />
+
+          <label className="text-[13px] text-muted-foreground uppercase tracking-wide mt-1">Key Support</label>
+          <MemberPicker
+            mode="multi"
+            members={activeMembers}
+            selected={editSupport}
+            onChange={setEditSupport}
+            exclude={editLead}
+            placeholder="Add support members..."
+          />
+
+          <div className="flex gap-2 mt-1">
+            <Button size="sm" onClick={handleSaveRole}>Save</Button>
+            <Button variant="ghost" size="sm" onClick={handleCancelEdit}>Cancel</Button>
+          </div>
+        </div>
+      )}
+
+      {isExpanded && (
+        <>
+          {items.length > 0 ? (
+            <div className="flex flex-col gap-1 mt-3">
+              <div className="hidden sm:grid grid-cols-[60px_1fr_60px_40px_40px_1fr_30px] gap-1.5 px-1.5 py-1 text-[12px] font-bold uppercase tracking-wider text-muted-foreground border-b border-border">
+                <span>Status</span>
+                <span>Item</span>
+                <span>Location</span>
+                <span>Get by</span>
+                <span>Value</span>
+                <span>Notes</span>
+                <span></span>
+              </div>
+
+              {items.map((item, idx) => (
+                <ItemRow
+                  key={item.id}
+                  item={item}
+                  canEdit={canEditItem(item)}
+                  onCycleStatus={onCycleStatus}
+                  onDelete={onDelete}
+                  onUpdate={onUpdateItem}
+                  isFirstItem={isFirstRole && idx === 0}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyState />
+          )}
+
+          {canEdit && (
+            addingForRole === role.name ? (
+              <AddItemForm
+                roleName={role.name}
+                item={newItem}
+                onChange={setNewItem}
+                onSubmit={onAddItem}
+                onCancel={onCancelAdd}
+              />
+            ) : (
+              <span data-tour-target={isFirstRole ? 'add-item-btn' : undefined}>
+                <Button variant="link" size="sm" className="mt-3 h-auto p-0" onClick={() => onStartAdd(role.name)}>
+                  <Plus size={13} className="mr-1" /> Add item
+                </Button>
+              </span>
+            )
+          )}
+        </>
+      )}
+    </div>
+  )
+}
