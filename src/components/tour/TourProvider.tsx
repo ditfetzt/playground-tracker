@@ -122,22 +122,21 @@ export function TourProvider({
       }
 
       const prevIndex = target
-      setCurrentStep(() => {
-        const step = steps[prevIndex]
-        const cbs = callbacksRef.current
-        if (cbs) {
-          if (step.expandFirstRole && prevIndex !== currentStep) {
-            cbs.reset()
-            setTimeout(() => {
-              callbacksRef.current?.expandRole('')
-              if (step.tab) callbacksRef.current?.switchTab(step.tab)
-            }, 150)
-          } else if (step.tab) {
-            cbs.switchTab(step.tab)
-          }
+      const step = steps[prevIndex]
+      setCurrentStep(prevIndex)
+
+      const cbs = callbacksRef.current
+      if (cbs) {
+        if (step.expandFirstRole && prevIndex !== currentStep) {
+          cbs.reset()
+          setTimeout(() => {
+            callbacksRef.current?.expandRole('')
+            if (step.tab) callbacksRef.current?.switchTab(step.tab)
+          }, 150)
+        } else if (step.tab) {
+          cbs.switchTab(step.tab)
         }
-        return prevIndex
-      })
+      }
     },
     [steps, currentStep],
   )
