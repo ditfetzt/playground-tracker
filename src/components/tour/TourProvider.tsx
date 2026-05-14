@@ -22,8 +22,8 @@ interface TourState {
   openPrompt: () => void
   start: () => void
   dismiss: () => void
-  dismissTracked: () => void
-  complete: () => void
+  dismissTracked: () => Promise<void>
+  complete: () => Promise<void>
   next: () => void
   prev: () => void
   restart: () => void
@@ -44,12 +44,14 @@ export function TourProvider({
   profileId,
   bypassOnboarding,
   roleNames,
+  onTracked,
   children,
 }: {
   isAdmin: boolean
   profileId: string | null
   bypassOnboarding: boolean
   roleNames: string[]
+  onTracked?: () => void
   children: ReactNode
 }) {
   const callbacksRef = useRef<TourCallbacks | null>(null)
@@ -85,15 +87,17 @@ export function TourProvider({
     callbacksRef.current?.expandRole(null)
   }, [])
 
-  const dismissTracked = useCallback(() => {
-    trackOnboardingDismissed(profileId || '')
+  const dismissTracked = useCallback(async () => {
+    await trackOnboardingDismissed(profileId || '')
+    onTracked?.()
     dismiss()
-  }, [profileId, dismiss])
+  }, [profileId, dismiss, onTracked])
 
-  const complete = useCallback(() => {
-    trackOnboardingCompleted(profileId || '')
+  const complete = useCallback(async () => {
+    await trackOnboardingCompleted(profileId || '')
+    onTracked?.()
     dismiss()
-  }, [profileId, dismiss])
+  }, [profileId, dismiss, onTracked])
 
   const jump = useCallback(
     (index: number, direction: 1 | -1) => {

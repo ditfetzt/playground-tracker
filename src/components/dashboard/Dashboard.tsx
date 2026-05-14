@@ -351,6 +351,7 @@ function DashboardContent() {
 
 export function Dashboard() {
   const { profile, isAdmin } = useAuth()
+  const { refresh } = useCamp()
 
   return (
     <TourProvider
@@ -358,6 +359,7 @@ export function Dashboard() {
       profileId={profile?.id ?? null}
       bypassOnboarding={profile?.bypass_onboarding ?? false}
       roleNames={profile?.role_names ?? []}
+      onTracked={refresh}
     >
       <DashboardContent />
     </TourProvider>
