@@ -43,15 +43,17 @@ export function TourProvider({
   isAdmin,
   profileId,
   bypassOnboarding,
+  roleNames,
   children,
 }: {
   isAdmin: boolean
   profileId: string | null
   bypassOnboarding: boolean
+  roleNames: string[]
   children: ReactNode
 }) {
   const callbacksRef = useRef<TourCallbacks | null>(null)
-  const steps = getFilteredSteps(isAdmin)
+  const steps = getFilteredSteps(isAdmin, roleNames)
   const [isPromptOpen, setIsPromptOpen] = useState(!bypassOnboarding && !isOnboardingDismissed())
   const [isActive, setIsActive] = useState(false)
   const [isDismissed, setIsDismissed] = useState(isOnboardingDismissed())

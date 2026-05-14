@@ -357,6 +357,7 @@ export function Dashboard() {
       isAdmin={isAdmin}
       profileId={profile?.id ?? null}
       bypassOnboarding={profile?.bypass_onboarding ?? false}
+      roleNames={profile?.role_names ?? []}
     >
       <DashboardContent />
     </TourProvider>

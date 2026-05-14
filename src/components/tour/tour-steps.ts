@@ -4,6 +4,7 @@ export interface TourStep {
   content: string
   targetId: string | null
   adminOnly?: boolean
+  requiredRole?: string
   requireItems?: boolean
   tab?: 'my' | 'camp'
   expandFirstRole?: boolean
@@ -20,7 +21,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: 'header',
     title: 'That\'s You',
-    content: 'Your initials and name sit up here. Whenever you log in, the team can see you\'re active and engaged. The logout button is tucked here too — though we doubt you\'ll want to leave.',
+    content: 'Your initials and name sit up here. Whenever you want it to have changed, tell one of the Admins. The logout button is tucked here too — though we doubt you\'ll want to leave the Playground. :P',
     targetId: 'header',
   },
   {
@@ -40,7 +41,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: 'status-badge',
     title: 'Tap to Make It Happen',
-    content: 'This is the heartbeat of the tracker. See an item? Tap its badge to mark it from Needed to Acquired. Instant. Satisfying. Everyone sees the progress update in real time. Go ahead — try it.',
+    content: 'This is the heartbeat of the tracker. Finalize an item? Tap its badge to mark it from "Needed" to "Got it". Everyone sees the progress update in real time. Go ahead and try it.',
     targetId: 'status-badge',
     tab: 'my',
     expandFirstRole: true,
@@ -48,7 +49,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: 'add-item',
     title: 'Spot a Gap? Fill It.',
-    content: 'Use the + Add Item button inside any role card when you think of something the camp still needs. Choose whether you\'re buying it or borrowing it, set a cost, and drop a location. Small contributions add up fast.',
+    content: 'Use the + Add Item button inside any role card when you think of something the camp still needs. Choose whether you\'re buying it or source it somehow, set a cost, drop a location where the item is right now and optionally some notes.',
     targetId: 'add-item-btn',
     tab: 'my',
     expandFirstRole: true,
@@ -72,14 +73,14 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: 'progress-ring',
     title: 'The Readiness Ring',
-    content: 'This beautiful circle is your camp\'s pulse. It combines every item acquired and every camp fee paid into a single percentage. Every time you mark something done, this number climbs. Aim for that glorious 100%.',
+    content: 'This circle is the camp\'s pulse. It combines every item acquired and every camp fee paid into a single percentage. Every time something is marked done, this number climbs. Aim for that glorious 100%.',
     targetId: 'progress-ring',
     tab: 'camp',
   },
   {
     id: 'camp-fees',
     title: 'Camp Fees at a Glance',
-    content: 'Here you\'ll see who has contributed and where to send your e-transfer. Every paid fee pushes the readiness up and keeps the camp humming. Check back often — momentum is contagious.',
+    content: 'Here you\'ll see who has contributed and where to send your e-transfer. Every paid fee pushes the readiness up and keeps the camp humming.',
     targetId: 'camp-fees',
     tab: 'camp',
     skipIfMissing: true,
@@ -91,6 +92,7 @@ export const TOUR_STEPS: TourStep[] = [
     targetId: 'fee-toggle',
     tab: 'camp',
     adminOnly: true,
+    requiredRole: 'Inventory & Finance',
     skipIfMissing: true,
   },
   {
@@ -112,11 +114,15 @@ export const TOUR_STEPS: TourStep[] = [
   {
     id: 'done',
     title: 'You\'re Ready',
-    content: 'You know the lay of the land. The ? icon in the top bar always brings this tour back. Now go check your roles, mark something acquired, add an item — every tap moves the camp closer to ready. Let\'s make Otherworld unforgettable.',
+    content: 'The ? icon in the top bar always brings this tour back. Now go check your roles, mark something acquired, add an item — every tap moves the camp closer to ready. Let\'s make Otherworld unforgettable.',
     targetId: null,
   },
 ]
 
-export function getFilteredSteps(isAdmin: boolean): TourStep[] {
-  return TOUR_STEPS.filter((s) => !s.adminOnly || isAdmin)
+export function getFilteredSteps(isAdmin: boolean, roleNames: string[]): TourStep[] {
+  return TOUR_STEPS.filter(
+    (s) =>
+      (!s.adminOnly || isAdmin) &&
+      (!s.requiredRole || roleNames.includes(s.requiredRole)),
+  )
 }
