@@ -111,8 +111,8 @@ export function MemberPicker({ mode, members, selected, onChange, exclude = [], 
       )}
 
       {open && (
-        <div className="absolute z-20 top-full mt-1 w-full bg-card border border-border rounded-lg shadow-lg max-h-48 overflow-y-auto">
-          <div className="sticky top-0 p-2 border-b border-border bg-card">
+        <div className="absolute z-20 top-full mt-1 w-full bg-popover border border-border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+          <div className="sticky top-0 p-2 border-b border-border bg-popover">
             <Input
               value={filter}
               onChange={e => setFilter(e.target.value)}
