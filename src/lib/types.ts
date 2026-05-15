@@ -19,6 +19,7 @@ export interface Role {
   name: string
   type: 'major' | 'minor' | 'internal'
   lead: string | null
+  co_lead: string[]
   key_support: string[]
   status: 'filled' | 'vacant'
   description: string | null

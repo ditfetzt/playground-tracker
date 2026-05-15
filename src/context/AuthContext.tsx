@@ -16,11 +16,11 @@ const AuthContext = createContext<AuthState | null>(null)
 const SESSION_KEY = 'playground_session'
 
 async function syncRoleNames(profile: Profile): Promise<Profile> {
-  const { data: roles } = await supabase.from('roles').select('name, lead, key_support')
+  const { data: roles } = await supabase.from('roles').select('name, lead, co_lead, key_support')
   if (!roles) return profile
 
   const myRoles = roles
-    .filter(r => r.lead === profile.name || r.key_support?.includes(profile.name))
+    .filter(r => r.lead === profile.name || r.co_lead?.includes(profile.name) || r.key_support?.includes(profile.name))
     .map(r => r.name)
 
   const updated = { ...profile, role_names: myRoles }

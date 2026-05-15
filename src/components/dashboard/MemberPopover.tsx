@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom'
 import type { Role } from '../../lib/types'
 import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
 import { useCamp } from '../../context/CampContext'
-import { Badge } from '../ui/badge'
 
 interface MemberPopoverProps {
   personName: string
@@ -16,7 +15,7 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
   const ref = useRef<HTMLDivElement>(null)
 
   const personRoles = data.roles.filter(
-    (r) => r.lead === personName || r.key_support?.includes(personName),
+    (r) => r.lead === personName || r.co_lead?.includes(personName) || r.key_support?.includes(personName),
   )
   const seen = new Set<string>()
   const uniqueRoles = personRoles.filter(r => {
@@ -88,13 +87,13 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
 
 function RoleLine({ role, personName }: { role: Role; personName: string }) {
   const isLead = role.lead === personName
+  const isCoLead = role.co_lead?.includes(personName)
+  const label = isLead ? 'lead' : isCoLead ? 'co-lead' : 'support'
   return (
     <div className="flex items-center gap-1.5 text-xs">
       <span className="shrink-0">{ROLE_EMOJIS[role.name] || '📋'}</span>
       <span className="text-foreground truncate flex-1">{role.name}</span>
-      <Badge variant={role.type === 'major' ? 'default' : 'secondary'} className="text-[9px] px-1 py-0 shrink-0">
-        {isLead ? 'lead' : role.type === 'major' ? 'support' : role.type}
-      </Badge>
+      <span className="text-[10px] text-muted-foreground shrink-0">{label}</span>
     </div>
   )
 }

@@ -58,6 +58,7 @@ export function RoleCard({
   const total = items.length
   const [editingRole, setEditingRole] = useState(false)
   const [editLead, setEditLead] = useState<string[]>(role.lead ? [role.lead] : [])
+  const [editCoLead, setEditCoLead] = useState<string[]>(role.co_lead || [])
   const [editSupport, setEditSupport] = useState<string[]>(role.key_support || [])
   const [editType, setEditType] = useState(role.type)
   const [popoverName, setPopoverName] = useState<string | null>(null)
@@ -81,6 +82,7 @@ export function RoleCard({
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
       lead: editLead[0] || null,
+      co_lead: editCoLead,
       key_support: editSupport,
       type: editType,
     })
@@ -89,6 +91,7 @@ export function RoleCard({
 
   const handleCancelEdit = () => {
     setEditLead(role.lead ? [role.lead] : [])
+    setEditCoLead(role.co_lead || [])
     setEditSupport(role.key_support || [])
     setEditType(role.type)
     setEditingRole(false)
@@ -96,7 +99,7 @@ export function RoleCard({
 
   return (
     <>
-    <div className="glass-card p-4" onMouseLeave={scheduleClose}>
+    <div className="glass-card p-4">
       <div className="w-full flex items-start justify-between mb-2 text-left group">
         <button onClick={onToggle} className="flex-1 text-left">
           <div className="flex items-center gap-2 flex-wrap">
@@ -111,7 +114,7 @@ export function RoleCard({
             {role.type === 'minor' ? (
               /* Minor roles: all members shown equally, no lead distinction */
               (() => {
-                const allMembers = [...new Set([role.lead, ...(role.key_support || [])])].filter(Boolean) as string[]
+                const allMembers = [...new Set([role.lead, ...(role.co_lead || []), ...(role.key_support || [])])].filter(Boolean) as string[]
                 return allMembers.map((name: string) => (
                   <MemberPill key={name} name={name} onClick={openPopover} onHoverClose={scheduleClose} />
                 ))
@@ -135,6 +138,9 @@ export function RoleCard({
                     {role.lead}
                   </div>
                 )}
+                {role.co_lead?.filter((s: string) => s && !s.match(/^\d/)).map((co: string) => (
+                  <MemberPill key={co} name={co} onClick={openPopover} onHoverClose={scheduleClose} />
+                ))}
                 {role.key_support?.filter((s: string) => s && !s.match(/^\d/) && !s.toLowerCase().includes('assistant')).map((support: string) => (
                   <MemberPill key={support} name={support} onClick={openPopover} onHoverClose={scheduleClose} />
                 ))}
@@ -150,6 +156,7 @@ export function RoleCard({
                   e.stopPropagation()
                   if (!editingRole) {
                     setEditLead(role.lead ? [role.lead] : [])
+                    setEditCoLead(role.co_lead || [])
                     setEditSupport(role.key_support || [])
                     setEditType(role.type)
                   }
@@ -202,6 +209,16 @@ export function RoleCard({
             onChange={setEditLead}
             exclude={[]}
             placeholder="Select lead..."
+          />
+
+          <label className="text-[13px] text-muted-foreground uppercase tracking-wide mt-1">Co-Lead</label>
+          <MemberPicker
+            mode="multi"
+            members={activeMembers}
+            selected={editCoLead}
+            onChange={setEditCoLead}
+            exclude={editLead}
+            placeholder="Add co-leads..."
           />
 
           <label className="text-[13px] text-muted-foreground uppercase tracking-wide mt-1">Key Support</label>
