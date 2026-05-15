@@ -152,7 +152,10 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                 return (
                   <div key={m.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-secondary/30 transition-colors group">
                     <span
-                      className="inline-flex items-center justify-center rounded-full font-bold text-[10px] shrink-0"
+                      data-popover-trigger
+                      className="inline-flex items-center justify-center rounded-full font-bold text-[10px] shrink-0 cursor-pointer hover:scale-110 transition-transform"
+                      onMouseEnter={(e) => openPopover(m.name, e.currentTarget)}
+                      onClick={(e) => { e.stopPropagation(); openPopover(m.name, e.currentTarget) }}
                       style={{
                         width: 22,
                         height: 22,
@@ -177,7 +180,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                         </form>
                       ) : (
                         <div className="flex items-center gap-1 min-w-0">
-                          <span data-popover-trigger className="text-[13px] text-foreground truncate cursor-pointer hover:text-primary transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(m.name, e.currentTarget) }} onMouseEnter={(e) => openPopover(m.name, e.currentTarget)}>{m.name}</span>
+                          <span className="text-[13px] text-foreground truncate">{m.name}</span>
                           {m.is_admin && (
                             <span className="text-[9px] font-bold uppercase px-1 py-px rounded bg-primary/10 text-primary border border-primary/20 shrink-0">A</span>
                           )}
