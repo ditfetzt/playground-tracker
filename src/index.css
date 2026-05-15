@@ -76,7 +76,7 @@ body {
   animation: 25s infinite alternate aurora-shift;
 }
 .particle-field { pointer-events: none; z-index: -1; position: fixed; inset: 0; overflow: hidden; }
-.particle { opacity: 0; border-radius: 50%; position: absolute; animation: linear infinite particle-drift; }
+.particle { opacity: 0; border-radius: 50%; position: absolute; animation: linear infinite particle-drift; animation-fill-mode: backwards; }
 .particle:nth-child(1) { background: #ff2d95; width: 3px; height: 3px; animation-duration: 18s; animation-delay: 0s; left: 10%; box-shadow: 0 0 6px #ff2d95; opacity: .6; }
 .particle:nth-child(2) { background: #00f0ff; width: 5px; height: 5px; animation-duration: 22s; animation-delay: 2s; left: 25%; box-shadow: 0 0 8px #00f0ff; opacity: .5; }
 .particle:nth-child(3) { background: #ff6b35; width: 3px; height: 3px; animation-duration: 15s; animation-delay: 4s; left: 40%; box-shadow: 0 0 6px #ff6b35; opacity: .7; }
@@ -139,7 +139,7 @@ body {
 [data-theme="blush"] .bg-aurora::before {
   background: radial-gradient(70% 80% at 100% 100%, #ff408112 0%, transparent 60%),
               radial-gradient(50% 60% at 0% 0%, #e040fb08 0%, transparent 50%);
-  animation: none; opacity: 0.6;
+  animation: blush-pulse 8s ease-in-out infinite; opacity: 0.6;
 }
 [data-theme="blush"] .particle-field { display: none; }
 
@@ -178,7 +178,7 @@ body {
   --color-input-bg: #2b2622; --color-checkbox-bg: #2b2622; --color-checkbox-border: #3f3a36;
 }
 
-[data-theme="ember"] .bg-aurora { background: #2b2622; animation: none; }
+[data-theme="ember"] .bg-aurora { background: linear-gradient(135deg, #2b2622 0%, #322c28 40%, #2b2622 70%, #352e28 100%) 0 0 / 200% 200%; animation: ember-shimmer 15s ease-in-out infinite; }
 [data-theme="ember"] .bg-aurora::before { display: none; }
 [data-theme="ember"] .particle-field { display: none; }
 
@@ -250,6 +250,16 @@ body {
   25% { transform: translate(-10px, 8px) scale(1.02); }
   50% { transform: translate(5px, -5px) scale(0.98); }
   75% { transform: translate(8px, 3px) scale(1.01); }
+}
+
+@keyframes blush-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes ember-shimmer {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 0%; }
 }
 
 /* Sharp glass-card becomes a bold geometric tile */
