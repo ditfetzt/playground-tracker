@@ -68,9 +68,8 @@ export function TourProvider({
   }, [])
 
   const openPrompt = useCallback(() => {
-    if (bypassOnboarding) return
     setIsPromptOpen(true)
-  }, [bypassOnboarding])
+  }, [])
 
   const start = useCallback(() => {
     setIsPromptOpen(false)
