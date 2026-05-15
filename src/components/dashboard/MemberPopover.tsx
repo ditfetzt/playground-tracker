@@ -20,8 +20,8 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
   )
   const seen = new Set<string>()
   const uniqueRoles = personRoles.filter(r => {
-    if (seen.has(r.id)) return false
-    seen.add(r.id)
+    if (seen.has(r.name)) return false
+    seen.add(r.name)
     return true
   })
 

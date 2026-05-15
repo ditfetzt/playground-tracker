@@ -1,4 +1,4 @@
-import { useState, type FormEvent, useCallback } from 'react'
+import { useState, useRef, useCallback, type FormEvent } from 'react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
@@ -68,6 +68,13 @@ export function RoleCard({
     setPopoverRect(el.getBoundingClientRect())
   }, [])
   const closePopover = useCallback(() => setPopoverName(null), [])
+  const closeWithDelay = useRef<ReturnType<typeof setTimeout>>(0)
+  const scheduleClose = useCallback(() => {
+    closeWithDelay.current = setTimeout(closePopover, 300)
+  }, [closePopover])
+  const cancelClose = useCallback(() => {
+    clearTimeout(closeWithDelay.current)
+  }, [])
 
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
@@ -87,7 +94,7 @@ export function RoleCard({
 
   return (
     <>
-    <div className="glass-card p-4">
+    <div className="glass-card p-4" onMouseLeave={scheduleClose}>
       <div className="w-full flex items-start justify-between mb-2 text-left group">
         <button onClick={onToggle} className="flex-1 text-left">
           <div className="flex items-center gap-2 flex-wrap">
@@ -104,14 +111,14 @@ export function RoleCard({
               (() => {
                 const allMembers = [...new Set([role.lead, ...(role.key_support || [])])].filter(Boolean) as string[]
                 return allMembers.map((name: string) => (
-                  <MemberPill key={name} name={name} onClick={openPopover} />
+                  <MemberPill key={name} name={name} onClick={openPopover} onHoverClose={scheduleClose} />
                 ))
               })()
             ) : (
               /* Major roles: lead + support with distinct styling */
               <>
                 {role.lead && (
-                  <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(role.lead!, e.currentTarget) }} onMouseEnter={(e) => openPopover(role.lead!, e.currentTarget)}>
+                  <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(role.lead!, e.currentTarget) }} onMouseEnter={(e) => openPopover(role.lead!, e.currentTarget)} onMouseLeave={scheduleClose}>
                     <span
                       className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
                       style={{
@@ -127,7 +134,7 @@ export function RoleCard({
                   </div>
                 )}
                 {role.key_support?.filter((s: string) => s && !s.match(/^\d/) && !s.toLowerCase().includes('assistant')).map((support: string) => (
-                  <MemberPill key={support} name={support} onClick={openPopover} />
+                  <MemberPill key={support} name={support} onClick={openPopover} onHoverClose={scheduleClose} />
                 ))}
               </>
             )}
@@ -263,18 +270,21 @@ export function RoleCard({
       )}
     </div>
     {popoverName && popoverRect && (
-      <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
+      <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
+        <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
+      </div>
     )}
   </>
   )
 }
 
-function MemberPill({ name, onClick }: { name: string; onClick: (name: string, el: HTMLElement) => void }) {
+function MemberPill({ name, onClick, onHoverClose }: { name: string; onClick: (name: string, el: HTMLElement) => void; onHoverClose: () => void }) {
   return (
     <div
       className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border cursor-pointer hover:bg-secondary/80 transition-colors"
       onClick={(e) => { e.stopPropagation(); onClick(name, e.currentTarget) }}
       onMouseEnter={(e) => onClick(name, e.currentTarget)}
+      onMouseLeave={onHoverClose}
     >
       <span
         className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
