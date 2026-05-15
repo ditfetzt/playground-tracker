@@ -13,6 +13,7 @@ interface MemberPopoverProps {
 export function MemberPopover({ personName, triggerRect, onClose }: MemberPopoverProps) {
   const { data } = useCamp()
   const ref = useRef<HTMLDivElement>(null)
+  const hoveringRef = useRef(false)
 
   const personRoles = data.roles.filter(
     (r) => r.lead === personName || r.co_lead?.includes(personName) || r.key_support?.includes(personName),
@@ -26,11 +27,9 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        const target = e.target as HTMLElement
-        if (target.closest('[data-popover-trigger]')) return
-        onClose()
-      }
+      const target = e.target as HTMLElement
+      if (target.closest('[data-popover-trigger]')) return
+      if (!hoveringRef.current) onClose()
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
@@ -50,36 +49,39 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
     : triggerRect.bottom + 6
 
   return createPortal(
-    <div
-      ref={ref}
-      className="fixed z-[300] glass-card rounded-xl p-3 min-w-[200px] max-w-[220px] border-border shadow-xl"
-      style={{ top: Math.max(8, top), left }}
-    >
-      <div className="flex items-center gap-2 mb-2">
-        <span
-          className="inline-flex items-center justify-center rounded-full font-bold text-[11px] shrink-0"
-          style={{
-            width: 26,
-            height: 26,
-            backgroundColor: getMemberColor(personName) + '20',
-            color: getMemberColor(personName),
-            border: `2px solid ${getMemberColor(personName)}40`,
-          }}
-        >
-          {personName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
-        </span>
-        <span className="text-sm font-semibold text-foreground truncate">{personName}</span>
-      </div>
-
-      {uniqueRoles.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No roles assigned.</p>
-      ) : (
-        <div className="flex flex-col gap-1">
-          {uniqueRoles.map((r) => (
-            <RoleLine key={r.id} role={r} personName={personName} />
-          ))}
+    <div className="fixed z-[300] pointer-events-none" style={{ top: Math.max(8, top), left }}>
+      <div
+        ref={ref}
+        className="glass-card rounded-xl p-3 min-w-[200px] max-w-[220px] border-border shadow-xl pointer-events-auto"
+        onMouseEnter={() => { hoveringRef.current = true }}
+        onMouseLeave={() => { hoveringRef.current = false }}
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <span
+            className="inline-flex items-center justify-center rounded-full font-bold text-[11px] shrink-0"
+            style={{
+              width: 26,
+              height: 26,
+              backgroundColor: getMemberColor(personName) + '20',
+              color: getMemberColor(personName),
+              border: `2px solid ${getMemberColor(personName)}40`,
+            }}
+          >
+            {personName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
+          </span>
+          <span className="text-sm font-semibold text-foreground truncate">{personName}</span>
         </div>
-      )}
+
+        {uniqueRoles.length === 0 ? (
+          <p className="text-xs text-muted-foreground">No roles assigned.</p>
+        ) : (
+          <div className="flex flex-col gap-1">
+            {uniqueRoles.map((r) => (
+              <RoleLine key={r.name} role={r} personName={personName} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>,
     document.body,
   )
