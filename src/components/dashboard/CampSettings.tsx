@@ -176,7 +176,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                         </form>
                       ) : (
                         <div className="flex items-center gap-1 min-w-0">
-                          <span className="text-[13px] text-foreground truncate cursor-pointer hover:text-primary transition-colors" onClick={(e) => openPopover(m.name, e.currentTarget)}>{m.name}</span>
+                          <span className="text-[13px] text-foreground truncate cursor-pointer hover:text-primary transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(m.name, e.currentTarget) }} onMouseEnter={(e) => openPopover(m.name, e.currentTarget)}>{m.name}</span>
                           {m.is_admin && (
                             <span className="text-[9px] font-bold uppercase px-1 py-px rounded bg-primary/10 text-primary border border-primary/20 shrink-0">A</span>
                           )}

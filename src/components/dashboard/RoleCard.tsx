@@ -111,7 +111,7 @@ export function RoleCard({
               /* Major roles: lead + support with distinct styling */
               <>
                 {role.lead && (
-                  <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => openPopover(role.lead!, e.currentTarget)}>
+                  <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(role.lead!, e.currentTarget) }} onMouseEnter={(e) => openPopover(role.lead!, e.currentTarget)}>
                     <span
                       className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
                       style={{
@@ -273,7 +273,8 @@ function MemberPill({ name, onClick }: { name: string; onClick: (name: string, e
   return (
     <div
       className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border cursor-pointer hover:bg-secondary/80 transition-colors"
-      onClick={(e) => onClick(name, e.currentTarget)}
+      onClick={(e) => { e.stopPropagation(); onClick(name, e.currentTarget) }}
+      onMouseEnter={(e) => onClick(name, e.currentTarget)}
     >
       <span
         className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"

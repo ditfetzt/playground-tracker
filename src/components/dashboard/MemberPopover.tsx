@@ -18,6 +18,12 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
   const personRoles = data.roles.filter(
     (r) => r.lead === personName || r.key_support?.includes(personName),
   )
+  const seen = new Set<string>()
+  const uniqueRoles = personRoles.filter(r => {
+    if (seen.has(r.id)) return false
+    seen.add(r.id)
+    return true
+  })
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -37,7 +43,7 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
 
   const left = Math.max(8, Math.min(triggerRect.left, window.innerWidth - 220 - 8))
   const top = (triggerRect.bottom + 6 + 120 > window.innerHeight)
-    ? triggerRect.top - personRoles.length * 32 - 70
+    ? triggerRect.top - uniqueRoles.length * 32 - 70
     : triggerRect.bottom + 6
 
   return createPortal(
@@ -62,11 +68,11 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
         <span className="text-sm font-semibold text-foreground truncate">{personName}</span>
       </div>
 
-      {personRoles.length === 0 ? (
+      {uniqueRoles.length === 0 ? (
         <p className="text-xs text-muted-foreground">No roles assigned.</p>
       ) : (
         <div className="flex flex-col gap-1">
-          {personRoles.map((r) => (
+          {uniqueRoles.map((r) => (
             <RoleLine key={r.id} role={r} personName={personName} />
           ))}
         </div>
