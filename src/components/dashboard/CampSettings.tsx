@@ -55,18 +55,20 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
   const nameInputRef = useRef<HTMLInputElement>(null)
 
-  const openPopover = useCallback((name: string, el: HTMLElement) => {
-    setPopoverName(name)
-    setPopoverRect(el.getBoundingClientRect())
-  }, [])
   const closePopover = useCallback(() => setPopoverName(null), [])
   const closeTimer = useRef<ReturnType<typeof setTimeout>>(0)
-  const scheduleClose = useCallback(() => {
-    closeTimer.current = setTimeout(closePopover, 300)
-  }, [closePopover])
   const cancelClose = useCallback(() => {
     clearTimeout(closeTimer.current)
   }, [])
+  const scheduleClose = useCallback(() => {
+    closeTimer.current = setTimeout(closePopover, 300)
+  }, [closePopover])
+
+  const openPopover = useCallback((name: string, el: HTMLElement) => {
+    cancelClose()
+    setPopoverName(name)
+    setPopoverRect(el.getBoundingClientRect())
+  }, [cancelClose])
 
   useEffect(() => {
     if (editingId) nameInputRef.current?.focus()

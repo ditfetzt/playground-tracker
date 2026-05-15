@@ -63,18 +63,20 @@ export function RoleCard({
   const [popoverName, setPopoverName] = useState<string | null>(null)
   const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
 
+  const closePopover = useCallback(() => setPopoverName(null), [])
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>(0)
+  const cancelClose = useCallback(() => {
+    clearTimeout(closeTimer.current)
+  }, [])
+  const scheduleClose = useCallback(() => {
+    closeTimer.current = setTimeout(closePopover, 300)
+  }, [closePopover])
+
   const openPopover = useCallback((name: string, el: HTMLElement) => {
+    cancelClose()
     setPopoverName(name)
     setPopoverRect(el.getBoundingClientRect())
-  }, [])
-  const closePopover = useCallback(() => setPopoverName(null), [])
-  const closeWithDelay = useRef<ReturnType<typeof setTimeout>>(0)
-  const scheduleClose = useCallback(() => {
-    closeWithDelay.current = setTimeout(closePopover, 300)
-  }, [closePopover])
-  const cancelClose = useCallback(() => {
-    clearTimeout(closeWithDelay.current)
-  }, [])
+  }, [cancelClose])
 
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
