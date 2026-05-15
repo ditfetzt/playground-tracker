@@ -1,9 +1,9 @@
-export type Theme = 'neon' | 'blush' | 'ember'
+export type Theme = 'neon' | 'blush' | 'ember' | 'moist'
 
 const KEY = 'playground_theme'
 const DEFAULT: Theme = 'neon'
 
-const THEMES: Theme[] = ['neon', 'blush', 'ember']
+const THEMES: Theme[] = ['neon', 'blush', 'ember', 'moist']
 
 export function getTheme(): Theme {
   const stored = localStorage.getItem(KEY)
