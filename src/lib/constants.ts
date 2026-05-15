@@ -54,7 +54,6 @@ export const ROLE_EMOJIS: Record<string, string> = {
   'Massage Tent Curator': '💆',
   'Puppets Stage Curator': '🧶',
   'Satellite Camp': '🛰️',
-  'Mystic Yoni': '🌸',
   'Mobile Playground': '🧸',
   'Reception': '🏠',
 }

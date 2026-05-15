@@ -149,7 +149,11 @@ export function CampOverview({
       <div className="glass-card p-3 text-center border-primary/20">
         <p className="text-[13px] text-muted-foreground">
           E-transfer camp fees to{' '}
-          <span className="text-foreground font-bold">hi@builtwithmaxim.com</span> or pay in Cash
+          <span className="text-foreground font-bold">hi@builtwithmaxim.com</span> or pay in Cash.
+        </p>
+        <p className="text-[12px] text-muted-foreground mt-1.5">
+          Please keep in mind that the ticket price is $280, for which you will receive a unique link to pay after filling out this{' '}
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeRZVJDkbEDPE-Ii-S0NO78x_tP85lHhQh3tGjyyvkIVDy0sw/viewform" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">form</a>.
         </p>
       </div>
 

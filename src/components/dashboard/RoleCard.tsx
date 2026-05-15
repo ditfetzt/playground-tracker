@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, useCallback } from 'react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
@@ -9,6 +9,7 @@ import { ItemRow } from './ItemRow'
 import { AddItemForm } from './AddItemForm'
 import { EmptyState } from './EmptyState'
 import { MemberPicker } from './MemberPicker'
+import { MemberPopover } from './MemberPopover'
 
 interface RoleCardProps {
   role: Role
@@ -59,6 +60,14 @@ export function RoleCard({
   const [editLead, setEditLead] = useState<string[]>(role.lead ? [role.lead] : [])
   const [editSupport, setEditSupport] = useState<string[]>(role.key_support || [])
   const [editType, setEditType] = useState(role.type)
+  const [popoverName, setPopoverName] = useState<string | null>(null)
+  const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
+
+  const openPopover = useCallback((name: string, el: HTMLElement) => {
+    setPopoverName(name)
+    setPopoverRect(el.getBoundingClientRect())
+  }, [])
+  const closePopover = useCallback(() => setPopoverName(null), [])
 
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
@@ -77,6 +86,7 @@ export function RoleCard({
   }
 
   return (
+    <>
     <div className="glass-card p-4">
       <div className="w-full flex items-start justify-between mb-2 text-left group">
         <button onClick={onToggle} className="flex-1 text-left">
@@ -89,38 +99,38 @@ export function RoleCard({
           </div>
 
           <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-            {role.lead && (
-              <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                <span
-                  className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
-                  style={{
-                    width: 16,
-                    height: 16,
-                    backgroundColor: getMemberColor(role.lead) + '20',
-                    color: getMemberColor(role.lead),
-                  }}
-                >
-                  {role.lead.slice(0, 2)}
-                </span>
-                {role.lead}
-              </div>
+            {role.type === 'minor' ? (
+              /* Minor roles: all members shown equally, no lead distinction */
+              (() => {
+                const allMembers = [...new Set([role.lead, ...(role.key_support || [])])].filter(Boolean) as string[]
+                return allMembers.map((name: string) => (
+                  <MemberPill key={name} name={name} onClick={openPopover} />
+                ))
+              })()
+            ) : (
+              /* Major roles: lead + support with distinct styling */
+              <>
+                {role.lead && (
+                  <div className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => openPopover(role.lead!, e.currentTarget)}>
+                    <span
+                      className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
+                      style={{
+                        width: 16,
+                        height: 16,
+                        backgroundColor: getMemberColor(role.lead) + '20',
+                        color: getMemberColor(role.lead),
+                      }}
+                    >
+                      {role.lead.slice(0, 2)}
+                    </span>
+                    {role.lead}
+                  </div>
+                )}
+                {role.key_support?.filter((s: string) => s && !s.match(/^\d/) && !s.toLowerCase().includes('assistant')).map((support: string) => (
+                  <MemberPill key={support} name={support} onClick={openPopover} />
+                ))}
+              </>
             )}
-            {role.key_support?.filter((s: string) => s && !s.match(/^\d/) && !s.toLowerCase().includes('assistant')).map((support: string) => (
-              <div key={support} className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border">
-                <span
-                  className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
-                  style={{
-                    width: 16,
-                    height: 16,
-                    backgroundColor: getMemberColor(support) + '20',
-                    color: getMemberColor(support),
-                  }}
-                >
-                  {support.slice(0, 2)}
-                </span>
-                {support}
-              </div>
-            ))}
           </div>
         </button>
         <div className="flex items-center gap-2 shrink-0">
@@ -251,6 +261,32 @@ export function RoleCard({
           )}
         </>
       )}
+    </div>
+    {popoverName && popoverRect && (
+      <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
+    )}
+  </>
+  )
+}
+
+function MemberPill({ name, onClick }: { name: string; onClick: (name: string, el: HTMLElement) => void }) {
+  return (
+    <div
+      className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border cursor-pointer hover:bg-secondary/80 transition-colors"
+      onClick={(e) => onClick(name, e.currentTarget)}
+    >
+      <span
+        className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
+        style={{
+          width: 16,
+          height: 16,
+          backgroundColor: getMemberColor(name) + '20',
+          color: getMemberColor(name),
+        }}
+      >
+        {name.slice(0, 2)}
+      </span>
+      {name}
     </div>
   )
 }

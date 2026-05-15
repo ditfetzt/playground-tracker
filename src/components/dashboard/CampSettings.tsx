@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect, type FormEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, type FormEvent } from 'react'
 import type { Profile } from '../../lib/types'
 import { getMemberColor } from '../../lib/constants'
 import { resetOnboardingForAll } from '../../lib/onboarding'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { ArrowLeft, Plus, Trash2, RotateCcw, Eye, EyeOff, Check, Pencil } from 'lucide-react'
+import { MemberPopover } from './MemberPopover'
 
 interface CampSettingsProps {
   members: Profile[]
@@ -50,7 +51,15 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   const [showInviteCodes, setShowInviteCodes] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
+  const [popoverName, setPopoverName] = useState<string | null>(null)
+  const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
   const nameInputRef = useRef<HTMLInputElement>(null)
+
+  const openPopover = useCallback((name: string, el: HTMLElement) => {
+    setPopoverName(name)
+    setPopoverRect(el.getBoundingClientRect())
+  }, [])
+  const closePopover = useCallback(() => setPopoverName(null), [])
 
   useEffect(() => {
     if (editingId) nameInputRef.current?.focus()
@@ -103,6 +112,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   const unseenCount = members.filter(p => !p.onboarding_dismissed_at && !p.onboarding_completed_at).length
 
   return (
+    <>
     <div className="h-[calc(100vh-2rem)] flex flex-col max-w-4xl mx-auto p-4">
       <div className="flex items-center gap-2 mb-3 shrink-0">
         <Button variant="ghost" size="icon" onClick={onBack}>
@@ -166,7 +176,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                         </form>
                       ) : (
                         <div className="flex items-center gap-1 min-w-0">
-                          <span className="text-[13px] text-foreground truncate">{m.name}</span>
+                          <span className="text-[13px] text-foreground truncate cursor-pointer hover:text-primary transition-colors" onClick={(e) => openPopover(m.name, e.currentTarget)}>{m.name}</span>
                           {m.is_admin && (
                             <span className="text-[9px] font-bold uppercase px-1 py-px rounded bg-primary/10 text-primary border border-primary/20 shrink-0">A</span>
                           )}
@@ -256,5 +266,9 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
         </div>
       </div>
     </div>
+    {popoverName && popoverRect && (
+      <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
+    )}
+  </>
   )
 }
