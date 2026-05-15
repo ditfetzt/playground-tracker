@@ -1,67 +1,68 @@
 # Ember — The Playground Design System
 
-Warm-dark theme inspired by terminal aesthetics and campfire embers. Think cozy firelight: charred wood surfaces, golden text, subtle burnt-orange accents. Quiet confidence — no chromatic screaming, just warmth.
+Warp-inspired terminal theme. Tight rectangles, hairline borders, warm charcoal canvas, quiet confidence. Think campfire embers in a dark IDE.
 
 ## Palette
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `--color-background` | `#1a1512` | Page body (warm charcoal) |
-| `--color-foreground` | `#f7f3ee` | Primary text (warm off-white) |
-| `--color-primary` | `#e8954c` | Ember orange — buttons, active elements |
-| `--color-primary-foreground` | `#1a1512` | Text on primary (dark) |
-| `--color-secondary` | `#2a242080` | Surfaces, hover backgrounds |
-| `--color-secondary-foreground` | `#d4c8b8` | Text on secondary |
-| `--color-muted` | `#2a2420a6` | Dimmed surfaces |
-| `--color-muted-foreground` | `#96887a` | Labels, descriptions, section headings |
-| `--color-accent` | `#38302899` | Ghost button hover |
-| `--color-accent-foreground` | `#f7f3ee` | Text on accent |
-| `--color-destructive` | `#e0554a` | Muted red — delete, errors |
-| `--color-destructive-foreground` | `#ffffff` | Text on destructive |
-| `--color-border` | `#e8954c30` | Card/input borders |
-| `--color-input` | `#e8954c40` | Input field border |
-| `--color-ring` | `#e8954c` | Focus ring |
-| `--color-card` | `#2a242080` | Glass-card background |
-| `--color-card-hover` | `#38302899` | Glass-card hover |
-| `--color-popover` | `#24201c` | Dropdown solid surface |
-
-## Semantic Colors
-
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `--color-amber` | `#d48c50` | Warnings, dismissed status |
-| `--color-emerald` | `#7ebc89` | Success, paid, completed |
-| `--color-pink` | `#c07070` | Accent |
-| `--color-glow-ember` | `#e8954c` | Warm glow |
-| `--color-glow-purple` | `#a090c0` | Muted purple accent |
-| `--color-glow-cyan` | `#709890` | Cool accent |
-| `--color-glow-gold` | `#d4b060` | Camp separator |
-
-## WCAG Contrast
-
-| Pair | Ratio | Pass |
-|------|-------|------|
-| `#f7f3ee` on `#1a1512` | 11.0:1 | AAA |
-| `#e8954c` on `#1a1512` | 6.0:1 | AA |
-| `#96887a` on `#1a1512` | 5.2:1 | AA |
-| `#1a1512` on `#e8954c` | 6.0:1 | AA |
-| `#7ebc89` on `#1a1512` | 6.3:1 | AA |
+| Token | Hex | Role |
+|-------|-----|------|
+| `--color-background` | `#2b2622` | Warm dark canvas (brown-beige warmth) |
+| `--color-foreground` | `#f7f5f0` | Off-white ink — default text |
+| `--color-primary` | `#f7f5f0` | Off-white — button fill (inverted) |
+| `--color-primary-foreground` | `#2b2622` | Dark text on primary buttons |
+| `--color-secondary` | `#383330a6` | Surface fill |
+| `--color-secondary-foreground` | `#dad2c1` | Body strong text |
+| `--color-muted-foreground` | `#aea69c` | Labels, headings, meta (lowest priority) |
+| `--color-destructive` | `#c44a42` | Delete, errors |
+| `--color-border` | `#3f3a36` | Hairline 1px divider |
+| `--color-ring` | `#f7f5f0` | Focus ring (off-white) |
+| `--color-card` | `#383330cc` | Card background (solid, warm tint) |
+| `--color-amber` | `#d48c50` | Warnings |
+| `--color-emerald` | `#7ebc89` | Success, paid |
 
 ## Typography
 
-Same as Neon — DM Sans + DM Mono. Font sizes and weights unchanged.
+| Level | Weight | Tracking | Size |
+|-------|--------|----------|------|
+| Display (h1) | 400 | -0.03em | 18px |
+| Headings (section) | 500 | 0.025em | 13px uppercase |
+| Body | 400 | — | 18px |
+| Mono | 400 | — | 13px |
 
-## Section Heading Pattern
+**Fonts**: DM Sans + DM Mono (unchanged from Neon)
 
-Same hierarchy. Gradient separators use ember tones:
-```
-<div class="h-px mt-1.5 bg-gradient-to-r from-[#e8954c] to-transparent" />
-```
+**Light display weights (400-500)** — quiet confidence. The hero reads like a developer editor, not a billboard. Negative tracking on display (-0.03em) is part of the voice.
 
-## Glass Card
+## Shape & Radius
 
-Same structure. Colors derived from theme tokens — warm brown-tinted translucent surfaces instead of purple.
+| Token | Value | Effect |
+|-------|-------|--------|
+| `--radius` | `0.25rem` (4px) | **Tight rectangles** — buttons 3px, cards 4px |
+| `--btn-radius` | `3px` | Almost rectangular CTAs |
+| `--card-border-width` | `1px` | Hairline only |
+
+**No blur**, **no shadows**. Elevation is carried entirely by surface-contrast and 1px hairline dividers. The brand never uses generous pills for CTAs.
+
+## Elevation
+
+Flat. 1px solid `#3f3a36` hairline borders define card edges against the warm canvas. Surface-contrast (canvas-soft on canvas) is the only depth mechanism. No drop shadows anywhere.
+
+## Spacing
+
+| Scale | Px |
+|-------|----|
+| `section-gap` | 24px |
+| Card padding | 24px |
+| Button padding | 8px 16px |
+
+## WCAG
+
+| Pair | Ratio |
+|------|-------|
+| `#f7f5f0` on `#2b2622` | 11.0:1 AAA |
+| `#aea69c` on `#2b2622` | 5.5:1 AA |
+| `#2b2622` on `#f7f5f0` | 11.0:1 AAA |
 
 ## Character
 
-Ember is the quietest of the three themes. Where Neon screams festival and Blush pops editorial, Ember whispers campfire. Tight radii, warm neutrals, no chromatic overstimulation. The ember orange `#e8954c` appears only on primary actions — the rest is warm-dark surface and off-white text.
+**Quiet, warm, disciplined.** No chromatic accent — the off-white IS the brand's voice. The warmth of the charcoal canvas (`#2b2622` carries brown-beige tones) IS the identity. Tight radii, hairline borders, light display weights. Reads like a terminal, feels like a campfire.

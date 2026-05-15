@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
+/* ────────────────────────────────────────────────────────────
+   Neon theme tokens (default / original)
+   ──────────────────────────────────────────────────────────── */
 @theme {
+  /* core palette */
   --color-background: #0a0612;
   --color-foreground: #f0e6ff;
   --color-card: #2d1e4180;
@@ -23,11 +27,31 @@
   --color-amber: #ff6b35;
   --color-pink: #ff2d95;
   --color-emerald: #39ff8c;
+
+  /* radius — controls Tailwind rounded-* scale */
   --radius: 0.875rem;
 
+  /* typography */
   --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
   --font-mono: "DM Mono", ui-monospace, monospace;
+  --font-weight-heading: 700;
+  --font-weight-display: 700;
+  --tracking-heading: 0.1em;
+  --tracking-display: normal;
 
+  /* component knobs */
+  --card-blur: 12px;
+  --card-border-width: 1px;
+  --card-shadow: none;
+  --card-bg: var(--color-card);
+  --card-border-color: var(--color-border-glow);
+  --input-bg: #190f28b3;
+  --input-border: 1.5px solid var(--color-input);
+  --btn-primary-bg: linear-gradient(135deg, var(--color-primary), var(--color-glow-pink));
+  --btn-radius: 10px;
+  --section-gap: 1rem;
+
+  /* extended palette */
   --color-deep: #0a0612;
   --color-surface: #1e1432a6;
   --color-card-hover: #37265099;
@@ -41,7 +65,6 @@
   --color-text-secondary: #c4b0e0;
   --color-text-muted: #8a7a9a;
   --color-border-glow: #b44dff40;
-
   --color-input-bg: #190f28b3;
   --color-input-focus-ring: #ff2d9533;
   --color-input-focus-ring2: #b44dff1a;
@@ -55,11 +78,14 @@
   --color-aurora-4: #39ff8c0d;
 }
 
-/* ─── Blush Theme ─── */
+/* ────────────────────────────────────────────────────────────
+   Blush theme (Verge-inspired editorial)
+   ──────────────────────────────────────────────────────────── */
 [data-theme="blush"] {
+  /* colors */
   --color-background: #0f0612;
   --color-foreground: #fce4ec;
-  --color-card: #2d102880;
+  --color-card: #2d1028cc;
   --color-card-foreground: #fce4ec;
   --color-popover: #1d0e20;
   --color-popover-foreground: #fce4ec;
@@ -73,7 +99,7 @@
   --color-accent-foreground: #fce4ec;
   --color-destructive: #ff1744;
   --color-destructive-foreground: #ffffff;
-  --color-border: #ff408140;
+  --color-border: #ff408180;
   --color-input: #ff40814d;
   --color-ring: #ff4081;
   --color-amber: #ff8c42;
@@ -81,7 +107,7 @@
   --color-emerald: #69f0ae;
   --color-deep: #0f0612;
   --color-surface: #2d1028a6;
-  --color-card-hover: #3d155099;
+  --color-card-hover: #3d1550cc;
   --color-glow-ember: #ff8c42;
   --color-glow-gold: #ffd740;
   --color-glow-purple: #e040fb;
@@ -91,70 +117,110 @@
   --color-text: #fce4ec;
   --color-text-secondary: #e0b0c0;
   --color-text-muted: #9a7a8a;
-  --color-border-glow: #ff408140;
+  --color-border-glow: #ff408180;
   --color-input-bg: #2d1028b3;
   --color-input-focus-ring: #ff408133;
   --color-input-focus-ring2: #ff40811a;
   --color-checkbox-bg: #2d1028b3;
-  --color-checkbox-border: #ff40814d;
+  --color-checkbox-border: #ff408180;
   --color-scrollbar-from: #ff4081;
   --color-scrollbar-to: #e040fb;
   --color-aurora-1: #ff408126;
   --color-aurora-2: #40c4ff1a;
   --color-aurora-3: #ff408114;
   --color-aurora-4: #69f0ae0d;
+
+  /* shape — Verge uses generous pills */
+  --radius: 1.5rem;
+  --card-blur: 0px;
+  --card-border-width: 2px;
+  --card-bg: var(--color-card);
+  --card-border-color: var(--color-border);
+  --input-bg: var(--color-secondary);
+  --input-border: 2px solid var(--color-border);
+  --btn-radius: 9999px;
+  --section-gap: 1.25rem;
+
+  /* typography — heavier display */
+  --font-weight-heading: 800;
+  --font-weight-display: 700;
+  --tracking-heading: 0.05em;
+  --tracking-display: -0.02em;
 }
 
-/* ─── Ember Theme ─── */
+/* ────────────────────────────────────────────────────────────
+   Ember theme (Warp-inspired terminal)
+   ──────────────────────────────────────────────────────────── */
 [data-theme="ember"] {
-  --color-background: #1a1512;
-  --color-foreground: #f7f3ee;
-  --color-card: #2a242080;
-  --color-card-foreground: #f7f3ee;
-  --color-popover: #24201c;
-  --color-popover-foreground: #f7f3ee;
-  --color-primary: #e8954c;
-  --color-primary-foreground: #1a1512;
-  --color-secondary: #2a2420a6;
-  --color-secondary-foreground: #d4c8b8;
-  --color-muted: #2a2420a6;
-  --color-muted-foreground: #96887a;
-  --color-accent: #38302899;
-  --color-accent-foreground: #f7f3ee;
-  --color-destructive: #e0554a;
+  /* colors */
+  --color-background: #2b2622;
+  --color-foreground: #f7f5f0;
+  --color-card: #383330cc;
+  --color-card-foreground: #f7f5f0;
+  --color-popover: #383330;
+  --color-popover-foreground: #f7f5f0;
+  --color-primary: #f7f5f0;
+  --color-primary-foreground: #2b2622;
+  --color-secondary: #383330a6;
+  --color-secondary-foreground: #dad2c1;
+  --color-muted: #383330a6;
+  --color-muted-foreground: #aea69c;
+  --color-accent: #3f3a3699;
+  --color-accent-foreground: #f7f5f0;
+  --color-destructive: #c44a42;
   --color-destructive-foreground: #ffffff;
-  --color-border: #e8954c30;
-  --color-input: #e8954c40;
-  --color-ring: #e8954c;
+  --color-border: #3f3a36;
+  --color-input: #3f3a36;
+  --color-ring: #f7f5f0;
   --color-amber: #d48c50;
   --color-pink: #c07070;
   --color-emerald: #7ebc89;
-  --color-deep: #1a1512;
-  --color-surface: #2a2420a6;
-  --color-card-hover: #38302899;
-  --color-glow-ember: #e8954c;
+  --color-deep: #2b2622;
+  --color-surface: #383330a6;
+  --color-card-hover: #3f3a36cc;
+  --color-glow-ember: #d48c50;
   --color-glow-gold: #d4b060;
   --color-glow-purple: #a090c0;
   --color-glow-green: #7ebc89;
   --color-glow-pink: #c07070;
   --color-glow-cyan: #709890;
-  --color-text: #f7f3ee;
-  --color-text-secondary: #d4c8b8;
-  --color-text-muted: #96887a;
-  --color-border-glow: #e8954c30;
-  --color-input-bg: #2a2420b3;
-  --color-input-focus-ring: #e8954c33;
-  --color-input-focus-ring2: #e8954c1a;
-  --color-checkbox-bg: #2a2420b3;
-  --color-checkbox-border: #e8954c4d;
-  --color-scrollbar-from: #e8954c;
-  --color-scrollbar-to: #d48c50;
-  --color-aurora-1: #e8954c26;
+  --color-text: #f7f5f0;
+  --color-text-secondary: #dad2c1;
+  --color-text-muted: #aea69c;
+  --color-border-glow: #3f3a36;
+  --color-input-bg: #2b2622b3;
+  --color-input-focus-ring: #f7f5f033;
+  --color-input-focus-ring2: #f7f5f01a;
+  --color-checkbox-bg: #2b2622b3;
+  --color-checkbox-border: #3f3a36;
+  --color-scrollbar-from: #3f3a36;
+  --color-scrollbar-to: #383330;
+  --color-aurora-1: #d48c5026;
   --color-aurora-2: #7098901a;
   --color-aurora-3: #c0707014;
   --color-aurora-4: #7ebc890d;
+
+  /* shape — Warp uses very tight rectangles */
+  --radius: 0.25rem;
+  --card-blur: 0px;
+  --card-border-width: 1px;
+  --card-bg: var(--color-card);
+  --card-border-color: var(--color-border);
+  --input-bg: var(--color-secondary);
+  --input-border: 1px solid var(--color-border);
+  --btn-radius: 3px;
+  --section-gap: 1.5rem;
+
+  /* typography — lighter display, tighter tracking */
+  --font-weight-heading: 500;
+  --font-weight-display: 400;
+  --tracking-heading: 0.025em;
+  --tracking-display: -0.03em;
 }
 
+/* ────────────────────────────────────────────────────────────
+   Global base
+   ──────────────────────────────────────────────────────────── */
 body {
   font-size: 18px;
   font-family: var(--font-sans);
@@ -164,9 +230,12 @@ body {
   overflow-x: hidden;
 }
 
+/* ────────────────────────────────────────────────────────────
+   Aurora background
+   ──────────────────────────────────────────────────────────── */
 .bg-aurora {
   z-index: -1;
-  background: linear-gradient(135deg, #0a0612 0%, #1a0a2e 20%, #0d1b2a 40%, #1a0a0a 60%, #12061e 80%, #0a0612 100%) 0 0 / 400% 400%;
+  background: linear-gradient(135deg, var(--color-deep) 0%, color-mix(in srgb, var(--color-primary) 15%, var(--color-deep)) 20%, var(--color-deep) 40%, color-mix(in srgb, var(--color-destructive) 8%, var(--color-deep)) 60%, var(--color-deep) 80%) 0 0 / 400% 400%;
   animation: 25s infinite aurora;
   position: fixed;
   inset: 0;
@@ -182,7 +251,6 @@ body {
   position: absolute;
   inset: 0;
 }
-
 @keyframes aurora {
   0% { background-position: 0% }
   25% { background-position: 100% 0 }
@@ -196,6 +264,9 @@ body {
   to { opacity: .5; transform: scale(1) }
 }
 
+/* ────────────────────────────────────────────────────────────
+   Particles
+   ──────────────────────────────────────────────────────────── */
 .particle-field {
   pointer-events: none;
   z-index: -1;
@@ -221,7 +292,6 @@ body {
 .particle:nth-child(10) { background: var(--color-glow-purple); width: 4px; height: 4px; animation-duration: 16s; animation-delay: 8s; left: 90%; box-shadow: 0 0 6px var(--color-glow-purple); opacity: .5; }
 .particle:nth-child(11) { background: var(--color-glow-gold); width: 2px; height: 2px; animation-duration: 24s; animation-delay: 1s; left: 33%; box-shadow: 0 0 4px var(--color-glow-gold); opacity: .5; }
 .particle:nth-child(12) { background: var(--color-glow-green); width: 3px; height: 3px; animation-duration: 14s; animation-delay: 9s; left: 77%; box-shadow: 0 0 6px var(--color-glow-green); opacity: .6; }
-
 @keyframes particle-drift {
   0% { opacity: 0; transform: translateY(100vh) scale(0) }
   10% { opacity: 1; transform: translateY(80vh) scale(1) }
@@ -229,6 +299,9 @@ body {
   to { opacity: 0; transform: translateY(-10vh) scale(.5) }
 }
 
+/* ────────────────────────────────────────────────────────────
+   Rainbow text
+   ──────────────────────────────────────────────────────────── */
 @keyframes rainbow-shimmer {
   0% { background-position: 0% }
   50% { background-position: 100% }
@@ -242,12 +315,26 @@ body {
   animation: 4s infinite rainbow-shimmer;
 }
 
+/* ────────────────────────────────────────────────────────────
+   Section heading (consistent across themes)
+   ──────────────────────────────────────────────────────────── */
+.section-heading {
+  font-size: 13px;
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--tracking-heading);
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+/* ────────────────────────────────────────────────────────────
+   Glass card (theme-driven)
+   ──────────────────────────────────────────────────────────── */
 .glass-card {
-  background: var(--color-card);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border-glow);
-  border-radius: 14px;
+  background: var(--card-bg, var(--color-card));
+  backdrop-filter: blur(var(--card-blur, 12px));
+  -webkit-backdrop-filter: blur(var(--card-blur, 12px));
+  border: var(--card-border-width, 1px) solid var(--card-border-color, var(--color-border-glow));
+  border-radius: var(--radius);
   transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
 }
 .glass-card:hover {
@@ -255,28 +342,35 @@ body {
   border-color: var(--color-primary);
 }
 
+/* ────────────────────────────────────────────────────────────
+   Primary button
+   ──────────────────────────────────────────────────────────── */
 .btn-primary {
-  color: #fff;
+  color: var(--color-primary-foreground);
   cursor: pointer;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-glow-pink));
+  background: var(--btn-primary-bg);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--btn-radius);
+  padding: 0.5rem 1rem;
   font-weight: 600;
   transition: all .3s;
 }
 .btn-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 0 35px var(--color-glow-pink), 0 0 80px var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px var(--color-primary);
 }
 .btn-primary:active {
-  transform: translateY(0) scale(.98);
+  transform: translateY(0);
 }
 
+/* ────────────────────────────────────────────────────────────
+   Inputs (theme-driven)
+   ──────────────────────────────────────────────────────────── */
 input, select, textarea {
   color: var(--color-text) !important;
-  background: var(--color-input-bg) !important;
-  border: 1.5px solid var(--color-input) !important;
-  border-radius: 10px !important;
+  background: var(--input-bg) !important;
+  border: var(--input-border) !important;
+  border-radius: var(--radius) !important;
   outline: none !important;
   transition: all .3s !important;
 }
@@ -289,6 +383,9 @@ select option {
   background: var(--color-deep);
 }
 
+/* ────────────────────────────────────────────────────────────
+   Scrollbar (theme-driven)
+   ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
@@ -299,6 +396,9 @@ select option {
   background: linear-gradient(var(--color-scrollbar-to), var(--color-scrollbar-from));
 }
 
+/* ────────────────────────────────────────────────────────────
+   Checkbox (theme-driven)
+   ──────────────────────────────────────────────────────────── */
 input[type="checkbox"] {
   appearance: none !important;
   width: 18px !important;
@@ -326,12 +426,13 @@ input[type="checkbox"]:checked::after {
   transform: rotate(45deg);
 }
 
+/* ────────────────────────────────────────────────────────────
+   Utilities
+   ──────────────────────────────────────────────────────────── */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
+.animate-spin { animation: spin 1s linear infinite; }
 
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -343,29 +444,19 @@ input[type="checkbox"]:checked::after {
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-.dashboard-column {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-}
-
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+.hide-scrollbar::-webkit-scrollbar { display: none; }
 
 @keyframes statusPulse {
-  0%, 88%, 100% { box-shadow: 0 0 0 0 rgba(180, 77, 255, 0); transform: rotate(0deg); }
+  0%, 88%, 100% { box-shadow: 0 0 0 0 transparent; transform: rotate(0deg); }
   91% { transform: rotate(-1.5deg); }
   94% { transform: rotate(1.5deg); }
   97% { box-shadow: 0 0 8px 2px var(--color-primary); transform: rotate(0deg); }
 }
-.animate-status-pulse {
-  animation: statusPulse 4s ease-in-out infinite;
-}
+.animate-status-pulse { animation: statusPulse 4s ease-in-out infinite; }
 
 @media (max-width: 640px) {
   .role-grid { grid-template-columns: 1fr !important; }
