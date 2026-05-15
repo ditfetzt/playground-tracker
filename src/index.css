@@ -155,9 +155,52 @@ body {
 [data-theme="blush"] .rainbow-text { animation: none; background: none; -webkit-text-fill-color: var(--color-foreground); letter-spacing: -0.02em; font-weight: 800; }
 
 /* ═══════════════════════════════════════════════════════════
-   EMBER — Bauhaus neon pink × green geometric playground
+   EMBER — warm campfire / Warp-inspired
    ═══════════════════════════════════════════════════════════ */
 [data-theme="ember"] {
+  --color-background: #2b2622; --color-foreground: #f7f5f0;
+  --color-card: #383330; --color-card-foreground: #f7f5f0;
+  --color-popover: #383330; --color-popover-foreground: #f7f5f0;
+  --color-primary: #f7f5f0; --color-primary-foreground: #2b2622;
+  --color-secondary: #383330a6; --color-secondary-foreground: #dad2c1;
+  --color-muted: #383330a6; --color-muted-foreground: #aea69c;
+  --color-accent: #3f3a3699; --color-accent-foreground: #f7f5f0;
+  --color-destructive: #c44a42; --color-border: #3f3a36;
+  --color-input: #3f3a36; --color-ring: #f7f5f0;
+  --color-amber: #d48c50; --color-emerald: #7ebc89;
+  --radius: 0.25rem; --color-deep: #2b2622; --color-surface: #383330a6;
+  --color-card-hover: #3f3a36;
+  --color-glow-pink: #c07070; --color-glow-cyan: #709890;
+  --color-glow-green: #7ebc89; --color-glow-ember: #d48c50;
+  --color-glow-gold: #d4b060; --color-glow-purple: #a090c0;
+  --color-text: #f7f5f0; --color-text-muted: #aea69c; --color-text-secondary: #dad2c1;
+  --color-border-glow: #3f3a36; --color-scrollbar-from: #3f3a36; --color-scrollbar-to: #383330;
+  --color-input-bg: #2b2622; --color-checkbox-bg: #2b2622; --color-checkbox-border: #3f3a36;
+}
+
+[data-theme="ember"] .bg-aurora { background: #2b2622; animation: none; }
+[data-theme="ember"] .bg-aurora::before { display: none; }
+[data-theme="ember"] .particle-field { display: none; }
+
+[data-theme="ember"] .glass-card {
+  background: #383330; backdrop-filter: none; -webkit-backdrop-filter: none;
+  border: 1px solid #3f3a36; border-radius: 4px; box-shadow: none;
+}
+[data-theme="ember"] .glass-card:hover { background: #3f3a36; border-color: #f7f5f030; box-shadow: none; }
+
+[data-theme="ember"] .btn-primary {
+  background: #f7f5f0; color: #2b2622; border-radius: 3px; box-shadow: none;
+}
+[data-theme="ember"] .btn-primary:hover { background: #e0dcd8; box-shadow: none; transform: none; }
+[data-theme="ember"] .btn-primary:active { transform: none; }
+
+[data-theme="ember"] .rainbow-text { animation: none; background: none; -webkit-text-fill-color: #f7f5f0; color: #f7f5f0; font-weight: 400; letter-spacing: -0.03em; }
+[data-theme="ember"] .animate-status-pulse { animation: none; box-shadow: none !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   HAZE — Bauhaus neon pink × green geometric playground
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="haze"] {
   --color-background: #120620; --color-foreground: #fce4ec;
   --color-card: #1a0a2e; --color-card-foreground: #fce4ec;
   --color-popover: #1a0a2e; --color-popover-foreground: #fce4ec;
@@ -179,10 +222,10 @@ body {
 }
 
 /* Bauhaus geometric background: floating circles & rectangles */
-[data-theme="ember"] .bg-aurora {
+[data-theme="haze"] .bg-aurora {
   background: #120620; animation: none;
 }
-[data-theme="ember"] .bg-aurora::before {
+[data-theme="haze"] .bg-aurora::before {
   content: "";
   position: absolute; inset: 0;
   background:
@@ -200,7 +243,7 @@ body {
     radial-gradient(ellipse 10% 60% at 100% 50%, #00ff8810 0%, transparent 60%);
   animation: bauhaus-float 20s ease-in-out infinite;
 }
-[data-theme="ember"] .particle-field { display: none; }
+[data-theme="haze"] .particle-field { display: none; }
 
 @keyframes bauhaus-float {
   0%, 100% { transform: translate(0, 0) scale(1); }
@@ -210,31 +253,31 @@ body {
 }
 
 /* Sharp glass-card becomes a bold geometric tile */
-[data-theme="ember"] .glass-card {
+[data-theme="haze"] .glass-card {
   background: #1a0a2e;
   backdrop-filter: none; -webkit-backdrop-filter: none;
   border: 3px solid #ff2d95; border-radius: 0px;
 }
-[data-theme="ember"] .glass-card:hover {
+[data-theme="haze"] .glass-card:hover {
   background: #2a1040;
   border-color: #00ff88;
   box-shadow: 6px 6px 0 #ff2d9540;
 }
 
 /* Bauhaus button: asymmetric, bold */
-[data-theme="ember"] .btn-primary {
+[data-theme="haze"] .btn-primary {
   background: #ff2d95; color: #fff;
   border-radius: 0px; border: none;
   text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
 }
-[data-theme="ember"] .btn-primary:hover {
+[data-theme="haze"] .btn-primary:hover {
   background: #00ff88; color: #120620;
   transform: translate(-2px, -2px);
   box-shadow: 4px 4px 0 #ff2d95;
 }
 
 /* Pastel rainbow text → bold pink */
-[data-theme="ember"] .rainbow-text {
+[data-theme="haze"] .rainbow-text {
   animation: none; background: none;
   -webkit-text-fill-color: #ff2d95; color: #ff2d95;
   font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase;
@@ -419,7 +462,7 @@ input[type="checkbox"]:checked::after {
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 
 /* Ember: suppress pulse */
-[data-theme="ember"] .animate-status-pulse { animation: none; box-shadow: none !important; }
+[data-theme="haze"] .animate-status-pulse { animation: none; box-shadow: none !important; }
 
 @media (max-width: 640px) {
   .role-grid { grid-template-columns: 1fr !important; }

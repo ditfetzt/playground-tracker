@@ -1,33 +1,35 @@
 # Ember — The Playground Design System
 
-Bauhaus-inspired geometric playground. Neon pink `#ff2d95` against complementary vibrant greens — mint `#00ff88`, teal `#00e5ff`, warm yellow `#ffb830`. Sharp corners, asymmetric shadows, bold typography.
+Warp-inspired warm-dark terminal theme. Quiet confidence. Warm charcoal canvas, off-white ink, hairline borders, light typography. Think campfire embers in a dark IDE.
 
 ## Palette
 
 | Token | Hex | Role |
 |-------|-----|------|
-| `--color-primary` | `#ff2d95` | Neon pink — buttons, borders, accents |
-| `--color-accent` | `#39ff8c` | Mint green — hover states, highlights |
-| `--color-emerald` | `#00ff88` | Neon green — complementary accent |
-| `--color-amber` | `#ffb830` | Warm yellow — pop accents |
-| `--color-foreground` | `#fce4ec` | Text on dark canvas |
+| `--color-background` | `#2b2622` | Warm dark canvas (brown-beige warmth) |
+| `--color-foreground` | `#f7f5f0` | Off-white ink — default text |
+| `--color-primary` | `#f7f5f0` | Off-white — button fill (inverted) |
+| `--color-primary-foreground` | `#2b2622` | Dark text on primary buttons |
+| `--color-card` | `#383330` | Solid card surface |
+| `--color-border` | `#3f3a36` | Hairline 1px divider |
+| `--color-muted-foreground` | `#aea69c` | Lowest priority text |
 
 ## Background
 
-Floating geometric shapes (circles, ellipses) drift slowly across a deep purple-black canvas. A 20s `bauhaus-float` animation simulates the movement of abstract Bauhaus compositions. No particles — the geometry IS the decoration.
+Flat warm charcoal canvas. No animation, no aurora, no particles. The surface IS the identity.
 
 ## Shape
 
 | Token | Value | Effect |
 |-------|-------|--------|
-| `--radius` | `0px` | **Sharp corners everywhere** — Bauhaus rejects ornament |
-| Cards | `3px solid` border | Bold, framed, like a poster |
-| Hover | `6px 6px 0` box-shadow | Asymmetric offset shadow |
+| `--radius` | `0.25rem` (4px) | Very tight — buttons 3px |
+| Cards | 1px hairline, 4px radius | Subtle framing only |
+| Hover | No shadow, no lift | Surface contrast only |
 
 ## Type
 
-Rainbow text becomes solid neon pink, weight 900, uppercase, wide tracking. Section headings stay bold uppercase. The type IS the geometry.
+Light display weight (400), negative tracking (-0.03em). Off-white text on warm dark. Quiet, confident, editorial.
 
 ## Character
 
-**Avant-garde, playful, primary.** Pink and green in bold confrontation. Cards with thick borders and offset shadows feel like cut paper. Buttons reverse color on hover. Nothing is subtle — this is Bauhaus for a Burner camp.
+**Quiet, warm, disciplined.** No chromatic accent. The warmth of the charcoal canvas is the brand. Tight radii, hairline borders. Reads like a terminal. Feels like a campfire.
