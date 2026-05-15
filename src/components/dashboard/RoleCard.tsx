@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, type FormEvent } from 'react'
+import { useState, useCallback, type FormEvent } from 'react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
@@ -65,19 +65,11 @@ export function RoleCard({
   const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
 
   const closePopover = useCallback(() => setPopoverName(null), [])
-  const closeTimer = useRef<ReturnType<typeof setTimeout>>(0)
-  const cancelClose = useCallback(() => {
-    clearTimeout(closeTimer.current)
-  }, [])
-  const scheduleClose = useCallback(() => {
-    closeTimer.current = setTimeout(closePopover, 300)
-  }, [closePopover])
 
   const openPopover = useCallback((name: string, el: HTMLElement) => {
-    cancelClose()
     setPopoverName(name)
     setPopoverRect(el.getBoundingClientRect())
-  }, [cancelClose])
+  }, [])
 
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
@@ -116,14 +108,14 @@ export function RoleCard({
               (() => {
                 const allMembers = [...new Set([role.lead, ...(role.co_lead || []), ...(role.key_support || [])])].filter(Boolean) as string[]
                 return allMembers.map((name: string) => (
-                  <MemberPill key={name} name={name} onClick={openPopover} onHoverClose={scheduleClose} />
+                  <MemberPill key={name} name={name} onClick={openPopover} />
                 ))
               })()
             ) : (
               /* Major roles: lead + support with distinct styling */
               <>
                 {role.lead && (
-                  <div data-popover-trigger className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(role.lead!, e.currentTarget) }} onMouseEnter={(e) => openPopover(role.lead!, e.currentTarget)} onMouseLeave={scheduleClose}>
+                  <div data-popover-trigger className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 cursor-pointer hover:bg-primary/20 transition-colors" onClick={(e) => { e.stopPropagation(); openPopover(role.lead!, e.currentTarget) }} onMouseEnter={(e) => openPopover(role.lead!, e.currentTarget)}>
                     <span
                       className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
                       style={{
@@ -139,10 +131,10 @@ export function RoleCard({
                   </div>
                 )}
                 {role.co_lead?.filter((s: string) => s && !s.match(/^\d/)).map((co: string) => (
-                  <MemberPill key={co} name={co} onClick={openPopover} onHoverClose={scheduleClose} />
+                  <MemberPill key={co} name={co} onClick={openPopover} />
                 ))}
                 {role.key_support?.filter((s: string) => s && !s.match(/^\d/) && !s.toLowerCase().includes('assistant')).map((support: string) => (
-                  <MemberPill key={support} name={support} onClick={openPopover} onHoverClose={scheduleClose} />
+                  <MemberPill key={support} name={support} onClick={openPopover} />
                 ))}
               </>
             )}
@@ -289,22 +281,19 @@ export function RoleCard({
       )}
     </div>
     {popoverName && popoverRect && (
-      <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose}>
-        <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
-      </div>
+      <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
     )}
   </>
   )
 }
 
-function MemberPill({ name, onClick, onHoverClose }: { name: string; onClick: (name: string, el: HTMLElement) => void; onHoverClose: () => void }) {
+function MemberPill({ name, onClick }: { name: string; onClick: (name: string, el: HTMLElement) => void }) {
   return (
     <div
       data-popover-trigger
       className="flex items-center gap-1 text-[13px] font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border cursor-pointer hover:bg-secondary/80 transition-colors"
       onClick={(e) => { e.stopPropagation(); onClick(name, e.currentTarget) }}
       onMouseEnter={(e) => onClick(name, e.currentTarget)}
-      onMouseLeave={onHoverClose}
     >
       <span
         className="inline-flex items-center justify-center rounded-full font-bold text-[6px] shrink-0"
