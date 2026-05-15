@@ -27,7 +27,11 @@ export function MemberPopover({ personName, triggerRect, onClose }: MemberPopove
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        const target = e.target as HTMLElement
+        if (target.closest('[data-popover-trigger]')) return
+        onClose()
+      }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
