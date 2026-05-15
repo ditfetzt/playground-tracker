@@ -8,7 +8,7 @@ import { uniqueBy } from '../../lib/utils'
 import type { InventoryItem, ItemStatus } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { Button } from '../ui/button'
-import { LogOut, Settings, HelpCircle } from 'lucide-react'
+import { LogOut, Settings, HelpCircle, Palette } from 'lucide-react'
 import { MyRolesPanel } from './MyRolesPanel'
 import { CampOverview } from './CampOverview'
 import { TabBar } from './TabBar'
@@ -16,6 +16,7 @@ import { CampSettings } from './CampSettings'
 import { TourProvider, useTour } from '../tour'
 import { TourOverlay } from '../tour/TourOverlay'
 import { OnboardingPrompt } from '../OnboardingPrompt'
+import { toggleTheme } from '../../lib/theme'
 
 const STATUS_SOUNDS = [
   'https://www.myinstants.com/media/sounds/nice-one.mp3',
@@ -244,6 +245,9 @@ function DashboardContent() {
             <span className="text-muted-foreground hidden sm:inline">{profile.name}</span>
             <Button variant="ghost" size="icon" onClick={() => tour.openPrompt()} title="Help">
               <HelpCircle size={14} />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={toggleTheme} title="Switch theme">
+              <Palette size={14} />
             </Button>
             <Button variant="ghost" size="icon" onClick={logout} title="Log out">
               <LogOut size={14} />

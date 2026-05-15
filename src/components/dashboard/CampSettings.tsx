@@ -114,17 +114,20 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
 
       <div className="flex-1 grid lg:grid-cols-[1fr_300px] gap-4 min-h-0">
         <div className="overflow-y-auto hide-scrollbar min-h-0">
-          <div className="flex items-center justify-between mb-1.5 sticky top-0 z-[1] bg-background/80 backdrop-blur-sm py-1.5 -mx-1 px-1">
-            <h2 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
-              Members · {members.length}
-            </h2>
-            <button
-              onClick={() => setShowInviteCodes(!showInviteCodes)}
-              className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {showInviteCodes ? <EyeOff size={12} /> : <Eye size={12} />}
-              {showInviteCodes ? 'Hide codes' : 'Show codes'}
-            </button>
+          <div className="mb-3">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
+                Members · {members.length}
+              </h3>
+              <button
+                onClick={() => setShowInviteCodes(!showInviteCodes)}
+                className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {showInviteCodes ? <EyeOff size={12} /> : <Eye size={12} />}
+                {showInviteCodes ? 'Hide codes' : 'Show codes'}
+              </button>
+            </div>
+            <div className="h-px mt-1.5 bg-gradient-to-r from-[#b44dff] to-transparent" />
           </div>
 
           {sorted.length === 0 ? (
@@ -218,7 +221,10 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
           )}
 
           <div className="glass-card p-4 rounded-xl">
-            <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Onboarding</h3>
+            <div className="mb-3">
+              <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">Onboarding</h3>
+              <div className="h-px mt-1.5 bg-gradient-to-r from-[#b44dff] to-transparent" />
+            </div>
             <div className="flex gap-3 mb-4">
               <div className="flex-1 text-center">
                 <span className="block text-lg font-bold text-emerald-400">{completedCount}</span>
