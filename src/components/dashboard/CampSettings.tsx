@@ -98,8 +98,8 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
     return new Date(b.last_login).getTime() - new Date(a.last_login).getTime()
   })
 
-  const dismissedCount = members.filter(p => p.onboarding_dismissed_at).length
   const completedCount = members.filter(p => p.onboarding_completed_at).length
+  const dismissedCount = members.filter(p => p.onboarding_dismissed_at && !p.onboarding_completed_at).length
   const unseenCount = members.filter(p => !p.onboarding_dismissed_at && !p.onboarding_completed_at).length
 
   return (

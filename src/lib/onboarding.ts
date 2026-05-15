@@ -21,11 +21,12 @@ export async function trackOnboardingDismissed(profileId: string) {
     .from('profiles')
     .update({ onboarding_dismissed_at: new Date().toISOString() })
     .eq('id', profileId)
+    .is('onboarding_completed_at', null)
     .select()
   if (error) {
     console.error('[trackOnboardingDismissed] error:', error.message, error.details, error.hint)
   } else if (!data || data.length === 0) {
-    console.warn('[trackOnboardingDismissed] no rows matched — profileId may be wrong or table inaccessible')
+    console.warn('[trackOnboardingDismissed] skipped — already completed or profile not found')
   } else {
     console.log('[trackOnboardingDismissed] success, updated:', data[0]?.name)
   }
@@ -35,7 +36,10 @@ export async function trackOnboardingCompleted(profileId: string) {
   console.log('[trackOnboardingCompleted] profileId:', profileId)
   const { data, error } = await supabase
     .from('profiles')
-    .update({ onboarding_completed_at: new Date().toISOString() })
+    .update({
+      onboarding_completed_at: new Date().toISOString(),
+      onboarding_dismissed_at: null,
+    })
     .eq('id', profileId)
     .select()
   if (error) {
