@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import type { Profile } from '../../lib/types'
 import { getMemberColor } from '../../lib/constants'
 import { Input } from '../ui/input'
@@ -16,7 +17,9 @@ interface MemberPickerProps {
 export function MemberPicker({ mode, members, selected, onChange, exclude = [], placeholder = 'Select...' }: MemberPickerProps) {
   const [open, setOpen] = useState(false)
   const [filter, setFilter] = useState('')
+  const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null)
   const ref = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const available = members.filter(m =>
     !selected.includes(m.name) &&
@@ -26,11 +29,20 @@ export function MemberPicker({ mode, members, selected, onChange, exclude = [], 
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      const target = e.target as Node
+      if (ref.current && !ref.current.contains(target) && !dropdownRef.current?.contains(target)) setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
+
+  const toggle = () => {
+    if (!open && ref.current) {
+      setTriggerRect(ref.current.getBoundingClientRect())
+    }
+    setOpen(!open)
+    setFilter('')
+  }
 
   const select = (name: string) => {
     if (mode === 'single') {
@@ -52,7 +64,7 @@ export function MemberPicker({ mode, members, selected, onChange, exclude = [], 
       {mode === 'single' ? (
         <button
           type="button"
-          onClick={() => { setOpen(!open); setFilter('') }}
+          onClick={toggle}
           className="w-full flex items-center gap-2 px-3 py-2 rounded border border-input bg-background text-foreground text-sm hover:border-ring transition-colors"
         >
           {selected[0] ? (
@@ -102,7 +114,7 @@ export function MemberPicker({ mode, members, selected, onChange, exclude = [], 
           )}
           <button
             type="button"
-            onClick={() => { setOpen(!open); setFilter('') }}
+            onClick={toggle}
             className="w-full flex items-center gap-1 px-3 py-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <span>+</span> {selected.length > 0 ? 'Add support' : placeholder}
@@ -110,8 +122,16 @@ export function MemberPicker({ mode, members, selected, onChange, exclude = [], 
         </div>
       )}
 
-      {open && (
-        <div className="absolute z-20 top-full mt-1 w-full bg-popover border border-border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+      {open && triggerRect && createPortal(
+        <div
+          ref={dropdownRef}
+          className="fixed z-[200] bg-popover border border-border rounded-lg shadow-xl max-h-48 overflow-y-auto"
+          style={{
+            top: triggerRect.bottom + 4,
+            left: triggerRect.left,
+            width: triggerRect.width,
+          }}
+        >
           <div className="sticky top-0 p-2 border-b border-border bg-popover">
             <Input
               value={filter}
@@ -146,7 +166,8 @@ export function MemberPicker({ mode, members, selected, onChange, exclude = [], 
               </button>
             ))
           )}
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   )
