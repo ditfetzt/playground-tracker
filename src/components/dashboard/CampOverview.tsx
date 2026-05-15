@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import confetti from 'canvas-confetti'
 import { ChevronDown } from 'lucide-react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
-import { getMemberColor, CAMP_FEE_PER_PERSON, ROLE_EMOJIS } from '../../lib/constants'
+import { getMemberColor, CAMP_FEE_PER_PERSON, ART_GRANT, ROLE_EMOJIS } from '../../lib/constants'
 
 interface CampOverviewProps {
   readyCount: number
@@ -123,54 +123,62 @@ export function CampOverview({
       </div>
 
       {/* Budget bar */}
-      <div className="glass-card p-3 border-emerald-500/10">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[14px] font-bold uppercase tracking-widest text-foreground">Budget</span>
+      <div className="bg-secondary/10 rounded-lg p-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">Budget</span>
           <span className="text-xs font-mono text-foreground">
-            ${budgetUsed.toFixed(0)} <span className="text-muted-foreground">/ ${budgetTotal}</span>
+            ${budgetUsed.toFixed(0)} <span className="text-muted-foreground">/ ${budgetTotal.toLocaleString()}</span>
           </span>
         </div>
-        <div className="w-full h-2.5 rounded-full bg-emerald-500/10 overflow-hidden">
+        <div className="w-full h-2 rounded-full bg-emerald-500/10 overflow-hidden">
           <div
             className="h-full rounded-full bg-emerald-500 transition-all duration-500"
             style={{ width: `${Math.min((budgetUsed / budgetTotal) * 100, 100)}%` }}
           />
         </div>
+        <p className="text-[11px] text-muted-foreground mt-2 text-center">
+          Art Grant ${ART_GRANT.toLocaleString()} + {profiles.length} members × ${CAMP_FEE_PER_PERSON} = ${budgetTotal.toLocaleString()}
+        </p>
       </div>
 
       {/* E-transfer */}
       <div className="glass-card p-3 text-center border-primary/20">
         <p className="text-[13px] text-muted-foreground">
           E-transfer camp fees to{' '}
-          <span className="text-foreground font-bold">hi@builtwithmaxim.com</span>
+          <span className="text-foreground font-bold">hi@builtwithmaxim.com</span> or pay in Cash
         </p>
       </div>
 
       {/* Camp Fees */}
       {profiles.length > 0 && (
         <div>
-          <button data-tour-target="camp-fees" onClick={() => setShowFees(!showFees)} className="w-full flex items-center gap-1.5 text-[13px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">
-            <span>Camp Fees · {paidCount}/{profiles.length} paid (${feeCollected})</span>
-            <ChevronDown size={12} className={`transition-transform shrink-0 ${showFees ? 'rotate-180' : ''}`} />
-          </button>
-          {showFees && (
-            <>
-              <div className="grid grid-cols-3 gap-1 mt-2">
-                {profiles.map((p, idx) => (
-                  <span key={p.id} data-tour-target={idx === 0 ? 'fee-toggle' : undefined}>
-                    <button disabled={!isAdmin} onClick={() => onToggleFeePaid(p.id)}
-                      className={`flex items-center gap-1 px-1.5 py-1 rounded text-[13px] transition-colors ${isAdmin ? 'cursor-pointer hover:bg-secondary/50' : 'cursor-default'} ${p.fee_paid ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}>
-                      <span className="inline-flex items-center justify-center rounded-full font-bold text-[7px] shrink-0" style={{ width: 16, height: 16, backgroundColor: getMemberColor(p.name) + '20', color: getMemberColor(p.name) }}>
-                        {p.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
-                      </span>
-                      <span className="truncate">{p.name}</span>
-                      <span className="ml-auto shrink-0">{p.fee_paid ? '✓' : '○'}</span>
-                    </button>
-                  </span>
-                ))}
+          <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Camp Fees</h3>
+          <div className="glass-card border-border">
+            <button data-tour-target="camp-fees" onClick={() => setShowFees(!showFees)} className="w-full p-3 flex items-center gap-2 text-left">
+              <span className="text-xs text-muted-foreground flex-1">
+                <span className="font-semibold text-foreground">{paidCount}/{profiles.length}</span> paid · ${feeCollected} collected
+              </span>
+              <ChevronDown size={12} className={`text-muted-foreground transition-transform shrink-0 ${showFees ? 'rotate-180' : ''}`} />
+            </button>
+            {showFees && (
+              <div className="px-3 pb-3">
+                <div className="grid grid-cols-3 gap-1">
+                  {profiles.map((p, idx) => (
+                    <span key={p.id} data-tour-target={idx === 0 ? 'fee-toggle' : undefined}>
+                      <button disabled={!isAdmin} onClick={() => onToggleFeePaid(p.id)}
+                        className={`flex items-center gap-1 px-1.5 py-1 rounded text-[13px] transition-colors ${isAdmin ? 'cursor-pointer hover:bg-secondary/50' : 'cursor-default'} ${p.fee_paid ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}>
+                        <span className="inline-flex items-center justify-center rounded-full font-bold text-[7px] shrink-0" style={{ width: 16, height: 16, backgroundColor: getMemberColor(p.name) + '20', color: getMemberColor(p.name) }}>
+                          {p.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
+                        </span>
+                        <span className="truncate">{p.name}</span>
+                        <span className="ml-auto shrink-0">{p.fee_paid ? '✓' : '○'}</span>
+                      </button>
+                    </span>
+                  ))}
+                </div>
               </div>
-            </>
-          )}
+            )}
+          </div>
         </div>
       )}
 
@@ -184,7 +192,6 @@ export function CampOverview({
           {buyingItems.length > 0 && (
             <div className="glass-card border-amber-500/20 mb-2">
               <button data-tour-target="needs-buying" onClick={() => setShowBuying(!showBuying)} className="w-full p-3 flex items-center gap-2 text-left">
-                <span className="text-sm shrink-0">⚠️</span>
                 <span className="text-xs text-muted-foreground flex-1">
                   <span className="font-semibold text-amber-600 dark:text-amber-400">{buyingItems.length}</span> need buying
                 </span>
@@ -201,7 +208,6 @@ export function CampOverview({
           {sourcingItems.length > 0 && (
             <div className="glass-card border-border">
               <button data-tour-target="needs-sourcing" onClick={() => setShowSourcing(!showSourcing)} className="w-full p-3 flex items-center gap-2 text-left">
-                <span className="text-sm shrink-0">🔍</span>
                 <span className="text-xs text-muted-foreground flex-1">
                   <span className="font-semibold text-foreground">{sourcingItems.length}</span> need sourcing
                 </span>
