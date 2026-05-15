@@ -104,7 +104,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
 
   return (
     <div className="h-[calc(100vh-2rem)] flex flex-col max-w-4xl mx-auto p-4">
-      <div className="flex items-center gap-3 mb-4 shrink-0">
+      <div className="flex items-center gap-2 mb-3 shrink-0">
         <Button variant="ghost" size="icon" onClick={onBack}>
           <ArrowLeft size={16} />
         </Button>
@@ -114,8 +114,10 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
 
       <div className="flex-1 grid lg:grid-cols-[1fr_300px] gap-4 min-h-0">
         <div className="overflow-y-auto hide-scrollbar min-h-0">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">Members</h2>
+          <div className="flex items-center justify-between mb-1.5 sticky top-0 z-[1] bg-background/80 backdrop-blur-sm py-1.5 -mx-1 px-1">
+            <h2 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
+              Members · {members.length}
+            </h2>
             <button
               onClick={() => setShowInviteCodes(!showInviteCodes)}
               className="flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
@@ -130,16 +132,16 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
               <p className="text-xs text-muted-foreground">No members yet.</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-0.5">
+            <div className="grid sm:grid-cols-2 gap-px">
               {sorted.map(m => {
                 const onb = onboardingLabel(m)
                 return (
-                  <div key={m.id} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary/30 transition-colors group">
+                  <div key={m.id} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-secondary/30 transition-colors group">
                     <span
-                      className="inline-flex items-center justify-center rounded-full font-bold text-[11px] shrink-0"
+                      className="inline-flex items-center justify-center rounded-full font-bold text-[10px] shrink-0"
                       style={{
-                        width: 28,
-                        height: 28,
+                        width: 22,
+                        height: 22,
                         backgroundColor: getMemberColor(m.name) + '20',
                         color: getMemberColor(m.name),
                         border: `2px solid ${getMemberColor(m.name)}40`,
@@ -148,58 +150,49 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                       {m.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        {editingId === m.id ? (
-                          <form onSubmit={(e) => { e.preventDefault(); saveEdit() }} className="flex items-center gap-1.5 flex-1">
-                            <Input
-                              ref={nameInputRef}
-                              value={editName}
-                              onChange={e => setEditName(e.target.value)}
-                              className="h-6 text-xs py-0 flex-1 min-w-0"
-                            />
-                            <Button type="submit" size="sm" className="h-6 text-[11px] px-2" disabled={!editName.trim()}>Save</Button>
-                            <Button type="button" variant="ghost" size="sm" className="h-6 text-[11px] px-2" onClick={cancelEdit}>Cancel</Button>
-                          </form>
-                        ) : (
-                          <span className="text-sm text-foreground truncate">{m.name}</span>
-                        )}
-                        {m.is_admin && (
-                          <span className="text-[10px] font-bold uppercase px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 shrink-0">Admin</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
-                        <span>{timeLabel(m.last_login)}</span>
+                      {editingId === m.id ? (
+                        <form onSubmit={(e) => { e.preventDefault(); saveEdit() }} className="flex items-center gap-1">
+                          <Input
+                            ref={nameInputRef}
+                            value={editName}
+                            onChange={e => setEditName(e.target.value)}
+                            className="h-5 text-[11px] py-0 flex-1 min-w-0"
+                          />
+                          <Button type="submit" size="sm" className="h-5 text-[10px] px-1.5" disabled={!editName.trim()}>Save</Button>
+                          <Button type="button" variant="ghost" size="sm" className="h-5 text-[10px] px-1.5" onClick={cancelEdit}>Cancel</Button>
+                        </form>
+                      ) : (
+                        <div className="flex items-center gap-1 min-w-0">
+                          <span className="text-[13px] text-foreground truncate">{m.name}</span>
+                          {m.is_admin && (
+                            <span className="text-[9px] font-bold uppercase px-1 py-px rounded bg-primary/10 text-primary border border-primary/20 shrink-0">A</span>
+                          )}
+                          <span className={`ml-auto text-[12px] shrink-0 ${onb.color}`}>{onb.text}</span>
+                          {m.fee_paid && <Check size={10} className="text-emerald-400 shrink-0" />}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                        <span className="shrink-0">{timeLabel(m.last_login)}</span>
                         {showInviteCodes && m.invite_code && (
-                          <>
-                            <span>·</span>
-                            <span className="font-mono truncate">{m.invite_code}</span>
-                          </>
-                        )}
-                        <span>·</span>
-                        <span className={onb.color}>{onb.text}</span>
-                        {m.fee_paid && (
-                          <>
-                            <span>·</span>
-                            <span className="text-emerald-400 flex items-center gap-0.5"><Check size={10} /> paid</span>
-                          </>
+                          <span className="font-mono truncate">{m.invite_code}</span>
                         )}
                       </div>
                     </div>
                     {editingId !== m.id && (
                       <button
                         onClick={() => startEditing(m)}
-                        className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                        className="p-1 rounded hover:bg-secondary text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all shrink-0"
                         title="Edit name"
                       >
-                        <Pencil size={12} />
+                        <Pencil size={11} />
                       </button>
                     )}
                     <button
                       onClick={() => { if (confirm(`Remove ${m.name}?`)) onDelete(m.id) }}
-                      className="p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                      className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all shrink-0"
                       title="Remove member"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={11} />
                     </button>
                   </div>
                 )
