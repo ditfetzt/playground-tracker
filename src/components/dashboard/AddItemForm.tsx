@@ -9,6 +9,7 @@ export interface NewItemState {
   sourcing: SourcingType
   value: string
   notes: string
+  linkUrl: string
 }
 
 interface AddItemFormProps {
@@ -90,6 +91,11 @@ export function AddItemForm({ roleName, item, onChange, onSubmit, onCancel }: Ad
         value={item.notes}
         onChange={e => onChange({ ...item, notes: e.target.value })}
         placeholder="Notes (optional)"
+      />
+      <Input
+        value={item.linkUrl}
+        onChange={e => onChange({ ...item, linkUrl: e.target.value })}
+        placeholder="🔗 Link (optional)"
       />
       <div className="flex gap-2">
         <Button type="submit" size="sm">Add</Button>

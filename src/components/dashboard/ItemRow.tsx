@@ -3,7 +3,7 @@ import type { InventoryItem, SourcingType } from '../../lib/types'
 import { STATUS_LABELS, STATUS_STYLES } from '../../lib/constants'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { Trash2, Pencil } from 'lucide-react'
+import { Trash2, Pencil, ExternalLink } from 'lucide-react'
 
 interface ItemRowProps {
   item: InventoryItem
@@ -21,6 +21,7 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
   const [editSourcing, setEditSourcing] = useState<SourcingType>(item.sourcing || 'buy')
   const [editValue, setEditValue] = useState(item.actual_cost ? String(item.actual_cost) : item.cost_estimate ? String(item.cost_estimate) : '')
   const [editNotes, setEditNotes] = useState(item.notes || '')
+  const [editLinkUrl, setEditLinkUrl] = useState(item.link_url || '')
   const [saving, setSaving] = useState(false)
   const [editError, setEditError] = useState('')
 
@@ -33,6 +34,7 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
     setEditSourcing(item.sourcing || 'buy')
     setEditValue(item.actual_cost ? String(item.actual_cost) : item.cost_estimate ? String(item.cost_estimate) : '')
     setEditNotes(item.notes || '')
+    setEditLinkUrl(item.link_url || '')
     setEditing(true)
   }
 
@@ -54,6 +56,7 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
       sourcing: editSourcing,
       actual_cost: editSourcing === 'buy' && editValue ? parseFloat(editValue) : null,
       notes: editNotes.trim() || null,
+      link_url: editLinkUrl.trim() || null,
     })
     setSaving(false)
     setEditing(false)
@@ -103,6 +106,7 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
         </div>
         {editError && <p className="text-[13px] text-destructive">{editError}</p>}
         <Input value={editNotes} onChange={e => setEditNotes(e.target.value)} placeholder="Notes" />
+        <Input value={editLinkUrl} onChange={e => setEditLinkUrl(e.target.value)} placeholder="🔗 Link (optional)" />
         <div className="flex gap-2">
           <Button type="submit" size="sm" disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
           <Button type="button" variant="ghost" size="sm" onClick={() => setEditing(false)}>Cancel</Button>
@@ -126,6 +130,11 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
         </span>
         <span className={`text-xs truncate flex-1 ${item.status === 'acquired' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
           {item.name}
+          {item.link_url && (
+            <a href={item.link_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="inline-flex align-middle ml-1 text-primary hover:text-primary/80" title={item.link_url}>
+              <ExternalLink size={10} />
+            </a>
+          )}
         </span>
         {canEdit && (
           <div className="flex gap-0.5 shrink-0">
@@ -157,6 +166,11 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
 
       <span className={`hidden sm:inline text-xs truncate ${item.status === 'acquired' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
         {item.name}
+        {item.link_url && (
+          <a href={item.link_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="inline-flex align-middle ml-1 text-primary hover:text-primary/80" title={item.link_url}>
+            <ExternalLink size={10} />
+          </a>
+        )}
       </span>
 
       <span className="hidden sm:inline text-[13px] text-muted-foreground truncate">

@@ -53,6 +53,7 @@ export interface InventoryItem {
   space_id: string | null
   status: ItemStatus
   notes: string | null
+  link_url: string | null
   created_by_invite: string | null
   created_at: string
 }

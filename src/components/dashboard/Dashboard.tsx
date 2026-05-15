@@ -50,7 +50,7 @@ function DashboardContent() {
   const campPanelRef = useRef<HTMLDivElement>(null)
 
   const [newItem, setNewItem] = useState<NewItemState>({
-    name: '', location: '', sourcing: 'buy', value: '', notes: '',
+    name: '', location: '', sourcing: 'buy', value: '', notes: '', linkUrl: '',
   })
 
   const allItems = uniqueBy(data.items, i => i.id)
@@ -105,6 +105,7 @@ function DashboardContent() {
             space_id: null,
             status: 'needed',
             notes: null,
+            link_url: null,
             created_by_invite: null,
             created_at: new Date().toISOString(),
           }, firstRole.name)
@@ -145,14 +146,15 @@ function DashboardContent() {
       actual_cost: newItem.value ? parseFloat(newItem.value) : null,
       storage_location: newItem.location.trim() || null,
       notes: newItem.notes.trim() || null,
+      link_url: newItem.linkUrl.trim() || null,
     })
-    setNewItem({ name: '', location: '', sourcing: 'buy', value: '', notes: '' })
+    setNewItem({ name: '', location: '', sourcing: 'buy', value: '', notes: '', linkUrl: '' })
     setAddingForRole(null)
   }
 
   const cancelAdd = () => {
     setAddingForRole(null)
-    setNewItem({ name: '', location: '', sourcing: 'buy', value: '', notes: '' })
+    setNewItem({ name: '', location: '', sourcing: 'buy', value: '', notes: '', linkUrl: '' })
   }
 
   const memberCount = activeProfiles.length

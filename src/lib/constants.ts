@@ -1,6 +1,6 @@
 import type { ItemStatus, SourcingType } from './types'
 
-export const ART_GRANT = 425
+export const ART_GRANT = 415
 export const CAMP_FEE_PER_PERSON = 50
 
 export const STATUS_CYCLE: ItemStatus[] = ['needed', 'acquired']

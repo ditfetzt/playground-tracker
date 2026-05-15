@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import confetti from 'canvas-confetti'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, ExternalLink } from 'lucide-react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
 import { getMemberColor, CAMP_FEE_PER_PERSON, ART_GRANT, ROLE_EMOJIS } from '../../lib/constants'
 
@@ -80,22 +80,26 @@ export function CampOverview({
 
   const UrgentItem = ({ item }: { item: InventoryItem }) => {
     const role = roles.find(r => r.name === item.assigned_role)
+    const roleEmoji = role ? (ROLE_EMOJIS[role.name] || '📋') : null
     return (
       <div className="flex flex-col gap-0.5 py-1.5 px-2 rounded bg-secondary/20 border border-border">
         <div className="flex items-center gap-2 flex-wrap">
+          {roleEmoji && <span className="text-xs shrink-0" title={role?.name}>{roleEmoji}</span>}
           <span className="text-xs font-semibold text-foreground">{item.name}</span>
-          {role && (
-            <span className="text-[12px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">{role.name}</span>
-          )}
           {item.sourcing === 'buy' && (item.actual_cost ? (
-            <span className="text-[13px] font-semibold text-amber-600 dark:text-amber-400">${item.actual_cost}</span>
+            <span className="text-[13px] font-semibold text-amber-600 dark:text-amber-400 ml-auto">${item.actual_cost}</span>
           ) : item.cost_estimate ? (
-            <span className="text-[13px] text-muted-foreground">~${item.cost_estimate}</span>
+            <span className="text-[13px] text-muted-foreground ml-auto">~${item.cost_estimate}</span>
           ) : null)}
           {item.sourcing !== 'buy' && (
-            <span className="text-[12px] font-bold px-1 py-0.5 rounded border bg-secondary text-muted-foreground border-border">
+            <span className="text-[12px] font-bold px-1 py-0.5 rounded border bg-secondary text-muted-foreground border-border ml-auto">
               {item.sourcing === 'borrow' ? 'Borrow' : 'Have'}
             </span>
+          )}
+          {item.link_url && (
+            <a href={item.link_url} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} className="shrink-0 text-primary hover:text-primary/80" title={item.link_url}>
+              <ExternalLink size={12} />
+            </a>
           )}
         </div>
         {(item.storage_location || item.notes) && (
