@@ -36,7 +36,7 @@ function playRandomSound() {
 
 function DashboardContent() {
   const { profile, logout } = useAuth()
-  const { data, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, deleteProfile, loading } = useCamp()
+  const { data, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, updateProfile, deleteProfile, loading } = useCamp()
   const tour = useTour()
 
   const isAdmin = profile?.is_admin === true
@@ -202,6 +202,7 @@ function DashboardContent() {
         <CampSettings
           members={activeProfiles}
           onAdd={addProfile}
+          onUpdate={updateProfile}
           onDelete={deleteProfile}
           onBack={() => setShowSettings(false)}
           currentProfileId={profile?.id ?? null}

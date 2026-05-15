@@ -1,14 +1,15 @@
-import { useState, type FormEvent } from 'react'
+import { useState, useRef, useEffect, type FormEvent } from 'react'
 import type { Profile } from '../../lib/types'
 import { getMemberColor } from '../../lib/constants'
 import { resetOnboardingForAll } from '../../lib/onboarding'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { ArrowLeft, Plus, Trash2, RotateCcw, Eye, EyeOff, Check } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, RotateCcw, Eye, EyeOff, Check, Pencil } from 'lucide-react'
 
 interface CampSettingsProps {
   members: Profile[]
   onAdd: (name: string, code: string) => Promise<void>
+  onUpdate: (id: string, changes: Partial<Profile>) => Promise<void>
   onDelete: (id: string) => Promise<void>
   onBack: () => void
   currentProfileId: string | null
@@ -40,13 +41,37 @@ function onboardingLabel(p: Profile): { text: string; color: string } {
   return { text: 'Not seen', color: 'text-muted-foreground' }
 }
 
-export function CampSettings({ members, onAdd, onDelete, onBack, currentProfileId }: CampSettingsProps) {
+export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, currentProfileId }: CampSettingsProps) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
   const [adding, setAdding] = useState(false)
   const [resetting, setResetting] = useState(false)
   const [showInviteCodes, setShowInviteCodes] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (editingId) nameInputRef.current?.focus()
+  }, [editingId])
+
+  const startEditing = (m: Profile) => {
+    setEditingId(m.id)
+    setEditName(m.name)
+  }
+
+  const saveEdit = async () => {
+    if (!editingId || !editName.trim()) return
+    await onUpdate(editingId, { name: editName.trim() })
+    setEditingId(null)
+    setEditName('')
+  }
+
+  const cancelEdit = () => {
+    setEditingId(null)
+    setEditName('')
+  }
 
   const handleAdd = async (e: FormEvent) => {
     e.preventDefault()
@@ -124,7 +149,20 @@ export function CampSettings({ members, onAdd, onDelete, onBack, currentProfileI
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-sm text-foreground truncate">{m.name}</span>
+                        {editingId === m.id ? (
+                          <form onSubmit={(e) => { e.preventDefault(); saveEdit() }} className="flex items-center gap-1.5 flex-1">
+                            <Input
+                              ref={nameInputRef}
+                              value={editName}
+                              onChange={e => setEditName(e.target.value)}
+                              className="h-6 text-xs py-0 flex-1 min-w-0"
+                            />
+                            <Button type="submit" size="sm" className="h-6 text-[11px] px-2" disabled={!editName.trim()}>Save</Button>
+                            <Button type="button" variant="ghost" size="sm" className="h-6 text-[11px] px-2" onClick={cancelEdit}>Cancel</Button>
+                          </form>
+                        ) : (
+                          <span className="text-sm text-foreground truncate">{m.name}</span>
+                        )}
                         {m.is_admin && (
                           <span className="text-[10px] font-bold uppercase px-1 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 shrink-0">Admin</span>
                         )}
@@ -147,6 +185,15 @@ export function CampSettings({ members, onAdd, onDelete, onBack, currentProfileI
                         )}
                       </div>
                     </div>
+                    {editingId !== m.id && (
+                      <button
+                        onClick={() => startEditing(m)}
+                        className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                        title="Edit name"
+                      >
+                        <Pencil size={12} />
+                      </button>
+                    )}
                     <button
                       onClick={() => { if (confirm(`Remove ${m.name}?`)) onDelete(m.id) }}
                       className="p-1.5 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-all shrink-0"

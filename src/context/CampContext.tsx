@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react'
 import { supabase } from '../lib/supabase'
-import type { CampData, InventoryItem, Role } from '../lib/types'
+import type { CampData, InventoryItem, Role, Profile } from '../lib/types'
 import { useAuth } from './AuthContext'
 
 interface CampContextValue {
@@ -14,6 +14,7 @@ interface CampContextValue {
   updateRole: (id: string, changes: Partial<Role>) => Promise<void>
   toggleFeePaid: (profileId: string) => Promise<void>
   addProfile: (name: string, inviteCode: string) => Promise<void>
+  updateProfile: (id: string, changes: Partial<Profile>) => Promise<void>
   deleteProfile: (id: string) => Promise<void>
 }
 
@@ -100,13 +101,18 @@ export function CampProvider({ children }: { children: ReactNode }) {
     await refresh()
   }, [refresh])
 
+  const updateProfile = useCallback(async (id: string, changes: Partial<Profile>) => {
+    await supabase.from('profiles').update(changes).eq('id', id)
+    await refresh()
+  }, [refresh])
+
   const deleteProfile = useCallback(async (id: string) => {
     await supabase.from('profiles').update({ active: false }).eq('id', id)
     await refresh()
   }, [refresh])
 
   return (
-    <CampContext.Provider value={{ data, loading, refresh, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, deleteProfile }}>
+    <CampContext.Provider value={{ data, loading, refresh, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, updateProfile, deleteProfile }}>
       {children}
     </CampContext.Provider>
   )

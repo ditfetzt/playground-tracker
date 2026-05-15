@@ -58,11 +58,13 @@ export function RoleCard({
   const [editingRole, setEditingRole] = useState(false)
   const [editLead, setEditLead] = useState<string[]>(role.lead ? [role.lead] : [])
   const [editSupport, setEditSupport] = useState<string[]>(role.key_support || [])
+  const [editType, setEditType] = useState(role.type)
 
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
       lead: editLead[0] || null,
       key_support: editSupport,
+      type: editType,
     })
     setEditingRole(false)
   }
@@ -70,6 +72,7 @@ export function RoleCard({
   const handleCancelEdit = () => {
     setEditLead(role.lead ? [role.lead] : [])
     setEditSupport(role.key_support || [])
+    setEditType(role.type)
     setEditingRole(false)
   }
 
@@ -129,6 +132,7 @@ export function RoleCard({
                   if (!editingRole) {
                     setEditLead(role.lead ? [role.lead] : [])
                     setEditSupport(role.key_support || [])
+                    setEditType(role.type)
                   }
                   setEditingRole(!editingRole)
                 }}
@@ -153,7 +157,25 @@ export function RoleCard({
       {/* Admin role edit form */}
       {editingRole && (
         <div className="flex flex-col gap-2 mb-3 p-3 rounded bg-secondary/30 border border-border">
-          <label className="text-[13px] text-muted-foreground uppercase tracking-wide">Lead</label>
+          <label className="text-[13px] text-muted-foreground uppercase tracking-wide">Role Type</label>
+          <div className="flex gap-1.5">
+            {(['major', 'minor'] as const).map(t => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setEditType(t)}
+                className={`flex-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  editType === t
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'bg-secondary text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+
+          <label className="text-[13px] text-muted-foreground uppercase tracking-wide mt-1">Lead</label>
           <MemberPicker
             mode="single"
             members={activeMembers}
