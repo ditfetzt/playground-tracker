@@ -1,4 +1,4 @@
-import { useState, useCallback, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
@@ -9,7 +9,6 @@ import { ItemRow } from './ItemRow'
 import { AddItemForm } from './AddItemForm'
 import { EmptyState } from './EmptyState'
 import { MemberPicker } from './MemberPicker'
-import { MemberPopover } from './MemberPopover'
 
 interface RoleCardProps {
   role: Role
@@ -31,6 +30,7 @@ interface RoleCardProps {
   onUpdateItem: (id: string, changes: Partial<InventoryItem>) => Promise<void>
   activeMembers: Profile[]
   isFirstRole: boolean
+  openPopover: (name: string, el: HTMLElement) => void
 }
 
 export function RoleCard({
@@ -53,6 +53,7 @@ export function RoleCard({
   onUpdateItem,
   activeMembers,
   isFirstRole,
+  openPopover,
 }: RoleCardProps) {
   const done = items.filter(i => i.status === 'acquired').length
   const total = items.length
@@ -61,15 +62,6 @@ export function RoleCard({
   const [editCoLead, setEditCoLead] = useState<string[]>(role.co_lead || [])
   const [editSupport, setEditSupport] = useState<string[]>(role.key_support || [])
   const [editType, setEditType] = useState(role.type)
-  const [popoverName, setPopoverName] = useState<string | null>(null)
-  const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
-
-  const closePopover = useCallback(() => setPopoverName(null), [])
-
-  const openPopover = useCallback((name: string, el: HTMLElement) => {
-    setPopoverName(name)
-    setPopoverRect(el.getBoundingClientRect())
-  }, [])
 
   const handleSaveRole = () => {
     onUpdateRole(role.id, {
@@ -90,7 +82,6 @@ export function RoleCard({
   }
 
   return (
-    <>
     <div className="glass-card p-4">
       <div className="w-full flex items-start justify-between mb-2 text-left group">
         <button onClick={onToggle} className="flex-1 text-left">
@@ -280,10 +271,6 @@ export function RoleCard({
         </>
       )}
     </div>
-    {popoverName && popoverRect && (
-      <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
-    )}
-  </>
   )
 }
 

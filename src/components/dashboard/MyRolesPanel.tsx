@@ -1,7 +1,8 @@
-import type { FormEvent } from 'react'
+import { useState, useCallback, type FormEvent } from 'react'
 import type { Role, InventoryItem, Profile } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { RoleCard } from './RoleCard'
+import { MemberPopover } from './MemberPopover'
 
 interface MyRolesPanelProps {
   roles: Role[]
@@ -50,6 +51,15 @@ export function MyRolesPanel({
   demoItem,
   demoRoleName,
 }: MyRolesPanelProps) {
+  const [popoverName, setPopoverName] = useState<string | null>(null)
+  const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
+
+  const openPopover = useCallback((name: string, el: HTMLElement) => {
+    setPopoverName(name)
+    setPopoverRect(el.getBoundingClientRect())
+  }, [])
+  const closePopover = useCallback(() => setPopoverName(null), [])
+
   return (
     <div className="flex flex-col gap-3">
       {roles.length === 0 ? (
@@ -84,10 +94,14 @@ export function MyRolesPanel({
                 onUpdateItem={onUpdateItem}
                 activeMembers={activeMembers}
                 isFirstRole={idx === 0}
+                openPopover={openPopover}
               />
             )
           })}
         </div>
+      )}
+      {popoverName && popoverRect && (
+        <MemberPopover personName={popoverName} triggerRect={popoverRect} onClose={closePopover} />
       )}
     </div>
   )
