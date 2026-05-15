@@ -120,7 +120,7 @@ export function TourOverlay() {
       }
     : null
 
-  const dim = 'rgba(8, 6, 20, 0.72)'
+  const dim = 'color-mix(in srgb, var(--color-deep) 72%, transparent)'
 
   return (
     <>
@@ -160,7 +160,7 @@ export function TourOverlay() {
           width: r.width,
           height: r.height,
           borderRadius: 10,
-          boxShadow: '0 0 0 2px rgba(180, 77, 255, 0.5)',
+          boxShadow: '0 0 0 2px color-mix(in srgb, var(--color-primary) 50%, transparent)',
           pointerEvents: 'none',
           transition: TRANSITION,
         }} />

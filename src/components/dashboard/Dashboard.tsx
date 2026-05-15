@@ -312,7 +312,7 @@ function DashboardContent() {
               <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
                 🛠 {isAdmin ? 'Roles' : 'My Roles'}
               </h3>
-              <div className="h-px mt-1.5 bg-gradient-to-r from-[#b44dff] to-transparent" />
+              <div className="h-px mt-1.5" style={{ background: 'linear-gradient(to right, var(--color-primary), transparent)' }} />
             </div>
             {myRolesPanel}
           </div>
@@ -321,7 +321,7 @@ function DashboardContent() {
               <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
                 🔥 Camp
               </h3>
-              <div className="h-px mt-1.5 bg-gradient-to-r from-[#ff6b35] via-[#ffd700] to-transparent" />
+              <div className="h-px mt-1.5" style={{ background: 'linear-gradient(to right, var(--color-glow-ember), var(--color-glow-gold), transparent)' }} />
             </div>
             {campPanel}
           </div>

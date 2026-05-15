@@ -127,7 +127,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                 {showInviteCodes ? 'Hide codes' : 'Show codes'}
               </button>
             </div>
-            <div className="h-px mt-1.5 bg-gradient-to-r from-[#b44dff] to-transparent" />
+            <div className="h-px mt-1.5" style={{ background: 'linear-gradient(to right, var(--color-primary), transparent)' }} />
           </div>
 
           {sorted.length === 0 ? (
@@ -223,7 +223,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
           <div className="glass-card p-4 rounded-xl">
             <div className="mb-3">
               <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">Onboarding</h3>
-              <div className="h-px mt-1.5 bg-gradient-to-r from-[#b44dff] to-transparent" />
+              <div className="h-px mt-1.5" style={{ background: 'linear-gradient(to right, var(--color-primary), transparent)' }} />
             </div>
             <div className="flex gap-3 mb-4">
               <div className="flex-1 text-center">
