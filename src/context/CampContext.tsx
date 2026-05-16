@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react'
+import { toast } from 'sonner'
 import { supabase } from '../lib/supabase'
-import type { CampData, InventoryItem, Role, Profile } from '../lib/types'
+import type { CampData, InventoryItem, Role, Profile, ItemComment } from '../lib/types'
 import { useAuth } from './AuthContext'
 
 interface CampContextValue {
@@ -16,6 +17,8 @@ interface CampContextValue {
   addProfile: (name: string, inviteCode: string) => Promise<void>
   updateProfile: (id: string, changes: Partial<Profile>) => Promise<void>
   deleteProfile: (id: string) => Promise<void>
+  addItemComment: (itemId: string, content: string) => Promise<void>
+  deleteItemComment: (commentId: string) => Promise<void>
 }
 
 const CampContext = createContext<CampContextValue | null>(null)
@@ -23,6 +26,7 @@ const CampContext = createContext<CampContextValue | null>(null)
 const EMPTY_DATA: CampData = {
   roles: [], items: [], finances: [], spaces: [],
   volunteerHours: [], tickets: [], activityLog: [], profiles: [],
+  itemComments: [],
 }
 
 export function CampProvider({ children }: { children: ReactNode }) {
@@ -37,18 +41,20 @@ export function CampProvider({ children }: { children: ReactNode }) {
       { key: 'roles' as const, table: 'roles' as const },
       { key: 'items' as const, table: 'inventory_items' as const },
       { key: 'profiles' as const, table: 'profiles' as const },
+      { key: 'itemComments' as const, table: 'item_comments' as const, select: '*, profile:profiles(name, emoji)' },
     ]
     const results = await Promise.all(
-      tables.map(async ({ table }) => {
-        const { data } = await supabase.from(table).select('*').order('created_at', { ascending: false })
+      tables.map(async ({ table, select }) => {
+        const { data } = await supabase.from(table).select(select || '*').order('created_at', { ascending: false })
         return data || []
       })
     )
     setData({
       ...EMPTY_DATA,
-      roles: results[0] as CampData['roles'],
-      items: results[1] as CampData['items'],
-      profiles: results[2] as CampData['profiles'],
+      roles: results[0] as unknown as CampData['roles'],
+      items: results[1] as unknown as CampData['items'],
+      profiles: results[2] as unknown as CampData['profiles'],
+      itemComments: results[3] as unknown as ItemComment[],
     })
     setLoading(false)
   }, [profile])
@@ -59,7 +65,7 @@ export function CampProvider({ children }: { children: ReactNode }) {
     refresh()
     channels.current.forEach(c => supabase.removeChannel(c))
     channels.current = []
-    ;['roles', 'inventory_items', 'profiles'].forEach(table => {
+    ;['roles', 'inventory_items', 'profiles', 'item_comments'].forEach(table => {
       const channel = supabase
         .channel(`public:${table}`)
         .on('postgres_changes', { event: '*', schema: 'public', table }, () => refresh())
@@ -111,8 +117,27 @@ export function CampProvider({ children }: { children: ReactNode }) {
     await refresh()
   }, [refresh])
 
+  const addItemComment = useCallback(async (itemId: string, content: string) => {
+    if (!profile) return
+    const { error } = await supabase.from('item_comments').insert({ item_id: itemId, profile_id: profile.id, content })
+    if (error) {
+      toast.error('Failed to add comment: ' + error.message)
+      return
+    }
+    await refresh()
+  }, [profile, refresh])
+
+  const deleteItemComment = useCallback(async (commentId: string) => {
+    const { error } = await supabase.from('item_comments').delete().eq('id', commentId)
+    if (error) {
+      toast.error('Failed to delete comment: ' + error.message)
+      return
+    }
+    await refresh()
+  }, [refresh])
+
   return (
-    <CampContext.Provider value={{ data, loading, refresh, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, updateProfile, deleteProfile }}>
+    <CampContext.Provider value={{ data, loading, refresh, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, updateProfile, deleteProfile, addItemComment, deleteItemComment }}>
       {children}
     </CampContext.Provider>
   )

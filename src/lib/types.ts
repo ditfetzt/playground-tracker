@@ -91,6 +91,15 @@ export interface Ticket {
   created_at: string
 }
 
+export interface ItemComment {
+  id: string
+  item_id: string
+  profile_id: string
+  content: string
+  created_at: string
+  profile?: { name: string; emoji: string }
+}
+
 export interface ActivityLogEntry {
   id: string
   message: string
@@ -110,4 +119,5 @@ export interface CampData {
   tickets: Ticket[]
   activityLog: ActivityLogEntry[]
   profiles: Profile[]
+  itemComments: ItemComment[]
 }

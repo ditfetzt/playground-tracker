@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from 'react'
-import type { InventoryItem, SourcingType } from '../../lib/types'
+import type { InventoryItem, SourcingType, Profile, ItemComment } from '../../lib/types'
 import { STATUS_LABELS, STATUS_STYLES } from '../../lib/constants'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Trash2, Pencil, ExternalLink } from 'lucide-react'
+import { ItemComments } from './ItemComments'
 
 interface ItemRowProps {
   item: InventoryItem
@@ -12,9 +13,14 @@ interface ItemRowProps {
   onDelete: (id: string) => void
   onUpdate: (id: string, changes: Partial<InventoryItem>) => Promise<void>
   isFirstItem?: boolean
+  profiles: Profile[]
+  currentProfile: Profile | null
+  comments: ItemComment[]
+  onAddComment: (itemId: string, content: string) => Promise<void>
+  onDeleteComment: (commentId: string) => Promise<void>
 }
 
-export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFirstItem }: ItemRowProps) {
+export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFirstItem, profiles, currentProfile, comments, onAddComment, onDeleteComment }: ItemRowProps) {
   const [editing, setEditing] = useState(false)
   const [editName, setEditName] = useState(item.name)
   const [editLocation, setEditLocation] = useState(item.storage_location || '')
@@ -116,6 +122,7 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
   }
 
   return (
+    <>
     <div className="flex flex-col sm:grid sm:grid-cols-[60px_1fr_60px_40px_40px_1fr_30px] gap-1 sm:gap-1.5 px-2 py-2 rounded-lg hover:bg-secondary/50 transition-colors items-start sm:items-center group">
       {/* Mobile: status + name + actions in one row */}
       <div className="flex items-center gap-2 w-full sm:hidden">
@@ -202,5 +209,14 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
         )}
       </div>
     </div>
+    <ItemComments
+      itemId={item.id}
+      comments={comments}
+      profiles={profiles}
+      currentProfile={currentProfile}
+      onAddComment={onAddComment}
+      onDeleteComment={onDeleteComment}
+    />
+  </>
   )
 }

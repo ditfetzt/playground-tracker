@@ -1,5 +1,5 @@
 import { useState, useCallback, type FormEvent } from 'react'
-import type { Role, InventoryItem, Profile } from '../../lib/types'
+import type { Role, InventoryItem, Profile, ItemComment } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { RoleCard } from './RoleCard'
 import { MemberPopover } from './MemberPopover'
@@ -26,6 +26,11 @@ interface MyRolesPanelProps {
   activeMembers: Profile[]
   demoItem?: InventoryItem | null
   demoRoleName?: string | null
+  profiles: Profile[]
+  currentProfile: Profile | null
+  comments: ItemComment[]
+  onAddComment: (itemId: string, content: string) => Promise<void>
+  onDeleteComment: (commentId: string) => Promise<void>
 }
 
 export function MyRolesPanel({
@@ -50,6 +55,11 @@ export function MyRolesPanel({
   activeMembers,
   demoItem,
   demoRoleName,
+  profiles,
+  currentProfile,
+  comments,
+  onAddComment,
+  onDeleteComment,
 }: MyRolesPanelProps) {
   const [popoverName, setPopoverName] = useState<string | null>(null)
   const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
@@ -95,6 +105,11 @@ export function MyRolesPanel({
                 activeMembers={activeMembers}
                 isFirstRole={idx === 0}
                 openPopover={openPopover}
+                profiles={profiles}
+                currentProfile={currentProfile}
+                comments={comments}
+                onAddComment={onAddComment}
+                onDeleteComment={onDeleteComment}
               />
             )
           })}

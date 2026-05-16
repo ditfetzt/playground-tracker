@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import type { Role, InventoryItem, Profile } from '../../lib/types'
+import type { Role, InventoryItem, Profile, ItemComment } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
 import { getMemberColor, ROLE_EMOJIS } from '../../lib/constants'
 import { Badge } from '../ui/badge'
@@ -31,6 +31,11 @@ interface RoleCardProps {
   activeMembers: Profile[]
   isFirstRole: boolean
   openPopover: (name: string, el: HTMLElement) => void
+  profiles: Profile[]
+  currentProfile: Profile | null
+  comments: ItemComment[]
+  onAddComment: (itemId: string, content: string) => Promise<void>
+  onDeleteComment: (commentId: string) => Promise<void>
 }
 
 export function RoleCard({
@@ -54,6 +59,11 @@ export function RoleCard({
   activeMembers,
   isFirstRole,
   openPopover,
+  profiles,
+  currentProfile,
+  comments,
+  onAddComment,
+  onDeleteComment,
 }: RoleCardProps) {
   const done = items.filter(i => i.status === 'acquired').length
   const total = items.length
@@ -244,6 +254,11 @@ export function RoleCard({
                   onDelete={onDelete}
                   onUpdate={onUpdateItem}
                   isFirstItem={isFirstRole && idx === 0}
+                  profiles={profiles}
+                  currentProfile={currentProfile}
+                  comments={comments}
+                  onAddComment={onAddComment}
+                  onDeleteComment={onDeleteComment}
                 />
               ))}
             </div>

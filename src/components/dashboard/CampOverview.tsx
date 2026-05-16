@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import confetti from 'canvas-confetti'
 import { ChevronDown, ExternalLink } from 'lucide-react'
-import type { Role, InventoryItem, Profile } from '../../lib/types'
+import type { Role, InventoryItem, Profile, ItemComment } from '../../lib/types'
 import { getMemberColor, CAMP_FEE_PER_PERSON, ART_GRANT, ROLE_EMOJIS } from '../../lib/constants'
+import { ItemComments } from './ItemComments'
 
 interface CampOverviewProps {
   readyCount: number
@@ -17,6 +18,10 @@ interface CampOverviewProps {
   isAdmin: boolean
   onToggleFeePaid: (profileId: string) => void
   tourStepId?: string
+  comments: ItemComment[]
+  currentProfile: Profile | null
+  onAddComment: (itemId: string, content: string) => Promise<void>
+  onDeleteComment: (commentId: string) => Promise<void>
 }
 
 const CONFETTI_KEY = 'playground_confetti_100'
@@ -39,6 +44,10 @@ export function CampOverview({
   isAdmin,
   onToggleFeePaid,
   tourStepId,
+  comments,
+  currentProfile,
+  onAddComment,
+  onDeleteComment,
 }: CampOverviewProps) {
   const firedRef = useRef(false)
   const [showFees, setShowFees] = useState(false)
@@ -108,6 +117,14 @@ export function CampOverview({
             {item.notes && <span className="truncate max-w-[200px]">📝 {item.notes}</span>}
           </div>
         )}
+        <ItemComments
+          itemId={item.id}
+          comments={comments}
+          profiles={profiles}
+          currentProfile={currentProfile}
+          onAddComment={onAddComment}
+          onDeleteComment={onDeleteComment}
+        />
       </div>
     )
   }
