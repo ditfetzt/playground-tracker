@@ -51,6 +51,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   const [showInviteCodes, setShowInviteCodes] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
+  const [editInviteCode, setEditInviteCode] = useState('')
   const [popoverName, setPopoverName] = useState<string | null>(null)
   const [popoverRect, setPopoverRect] = useState<DOMRect | null>(null)
   const nameInputRef = useRef<HTMLInputElement>(null)
@@ -69,18 +70,25 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   const startEditing = (m: Profile) => {
     setEditingId(m.id)
     setEditName(m.name)
+    setEditInviteCode(m.invite_code)
   }
 
   const saveEdit = async () => {
     if (!editingId || !editName.trim()) return
-    await onUpdate(editingId, { name: editName.trim() })
+    const changes: Partial<Profile> = { name: editName.trim() }
+    if (editInviteCode.trim()) {
+      changes.invite_code = editInviteCode.trim()
+    }
+    await onUpdate(editingId, changes)
     setEditingId(null)
     setEditName('')
+    setEditInviteCode('')
   }
 
   const cancelEdit = () => {
     setEditingId(null)
     setEditName('')
+    setEditInviteCode('')
   }
 
   const handleAdd = async (e: FormEvent) => {
@@ -168,15 +176,26 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                     </span>
                     <div className="flex-1 min-w-0">
                       {editingId === m.id ? (
-                        <form onSubmit={(e) => { e.preventDefault(); saveEdit() }} className="flex items-center gap-1">
-                          <Input
-                            ref={nameInputRef}
-                            value={editName}
-                            onChange={e => setEditName(e.target.value)}
-                            className="h-5 text-[11px] py-0 flex-1 min-w-0"
-                          />
-                          <Button type="submit" size="sm" className="h-5 text-[10px] px-1.5" disabled={!editName.trim()}>Save</Button>
-                          <Button type="button" variant="ghost" size="sm" className="h-5 text-[10px] px-1.5" onClick={cancelEdit}>Cancel</Button>
+                        <form onSubmit={(e) => { e.preventDefault(); saveEdit() }} className="flex flex-col gap-1">
+                          <div className="flex items-center gap-1">
+                            <Input
+                              ref={nameInputRef}
+                              value={editName}
+                              onChange={e => setEditName(e.target.value)}
+                              className="h-5 text-[11px] py-0 flex-1 min-w-0"
+                              placeholder="Name"
+                            />
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Input
+                              value={editInviteCode}
+                              onChange={e => setEditInviteCode(e.target.value)}
+                              className="h-5 text-[11px] py-0 flex-1 min-w-0 font-mono"
+                              placeholder="Invite code"
+                            />
+                            <Button type="submit" size="sm" className="h-5 text-[10px] px-1.5" disabled={!editName.trim()}>Save</Button>
+                            <Button type="button" variant="ghost" size="sm" className="h-5 text-[10px] px-1.5" onClick={cancelEdit}>Cancel</Button>
+                          </div>
                         </form>
                       ) : (
                         <div className="flex items-center gap-1 min-w-0">
@@ -188,12 +207,14 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                           {m.fee_paid && <Check size={10} className="text-emerald-400 shrink-0" />}
                         </div>
                       )}
-                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                        <span className="shrink-0">{timeLabel(m.last_login)}</span>
-                        {showInviteCodes && m.invite_code && (
-                          <span className="font-mono truncate">{m.invite_code}</span>
-                        )}
-                      </div>
+                      {editingId !== m.id && (
+                        <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                          <span className="shrink-0">{timeLabel(m.last_login)}</span>
+                          {showInviteCodes && m.invite_code && (
+                            <span className="font-mono truncate">{m.invite_code}</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     {editingId !== m.id && (
                       <button
