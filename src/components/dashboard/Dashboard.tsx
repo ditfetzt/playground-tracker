@@ -310,7 +310,7 @@ function DashboardContent() {
 
         <div className="hidden lg:grid lg:grid-cols-[440px_1.2fr] gap-4">
           <div ref={rolesPanelRef} className="overflow-y-auto hide-scrollbar max-h-[calc(100vh-160px)]">
-            <div className="sticky top-0 z-[1] bg-deep pb-1.5" data-tour-target="my-roles-panel">
+            <div className="sticky top-0 z-[1] backdrop-blur-lg pb-1.5" data-tour-target="my-roles-panel">
               <div className="mb-3">
                 <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
                   🛠 {isAdmin ? 'Roles' : 'My Roles'}
@@ -321,7 +321,7 @@ function DashboardContent() {
             <div className="mt-3">{myRolesPanel}</div>
           </div>
           <div ref={campPanelRef} className="overflow-y-auto hide-scrollbar max-h-[calc(100vh-160px)]">
-            <div className="sticky top-0 z-[1] bg-deep pb-1.5" data-tour-target="camp-panel">
+            <div className="sticky top-0 z-[1] backdrop-blur-lg pb-1.5" data-tour-target="camp-panel">
               <div className="mb-3">
                 <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
                   🔥 Camp
@@ -336,7 +336,7 @@ function DashboardContent() {
         <div className="lg:hidden">
           <TabBar tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
           <div className={activeTab === 'my' ? '' : 'hidden'}>
-            <div className="sticky top-0 z-[1] bg-deep pb-1.5" data-tour-target="my-roles-panel">
+            <div className="sticky top-0 z-[1] backdrop-blur-lg pb-1.5" data-tour-target="my-roles-panel">
               <div className="mb-2">
                 <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
                   🛠 {isAdmin ? 'Roles' : 'My Roles'}
@@ -347,7 +347,7 @@ function DashboardContent() {
             <div className="mt-2">{myRolesPanel}</div>
           </div>
           <div className={activeTab === 'camp' ? '' : 'hidden'}>
-            <div className="sticky top-0 z-[1] bg-deep pb-1.5" data-tour-target="camp-panel">
+            <div className="sticky top-0 z-[1] backdrop-blur-lg pb-1.5" data-tour-target="camp-panel">
               <div className="mb-2">
                 <h3 className="text-[13px] font-bold uppercase tracking-widest text-muted-foreground">
                   🔥 Camp
