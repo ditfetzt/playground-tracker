@@ -3,13 +3,12 @@ import confetti from 'canvas-confetti'
 import { useAuth } from '../../context/AuthContext'
 import { useCamp } from '../../context/CampContext'
 import { canEditRole, canEditItem } from '../../lib/permissions'
-import { ART_GRANT, CAMP_FEE_PER_PERSON, STATUS_CYCLE, getMemberColor, HIDDEN_ROLE_NAMES } from '../../lib/constants'
+import { ART_GRANT, CAMP_FEE_PER_PERSON, STATUS_CYCLE, HIDDEN_ROLE_NAMES } from '../../lib/constants'
 import { uniqueBy } from '../../lib/utils'
 import type { InventoryItem, ItemStatus } from '../../lib/types'
 import type { NewItemState } from './AddItemForm'
-import { Button } from '../ui/button'
-import { LogOut, Settings, HelpCircle, Palette } from 'lucide-react'
 import { MyRolesPanel } from './MyRolesPanel'
+import { UserMenu } from './UserMenu'
 import { CampOverview } from './CampOverview'
 import { TabBar } from './TabBar'
 import { CampSettings } from './CampSettings'
@@ -250,41 +249,22 @@ function DashboardContent() {
       <div className="flex items-center gap-2">
         {profile && (
           <div className="flex items-center gap-2 text-sm">
-            {isAdmin && (
-              <span data-tour-target="members-btn">
-                <Button variant="ghost" size="icon" onClick={() => setShowSettings(true)} title="Camp Settings">
-                  <Settings size={16} />
-                </Button>
-              </span>
-            )}
-            <span
-              className="inline-flex items-center justify-center rounded-full font-bold text-[13px] shrink-0"
-              style={{
-                width: 32,
-                height: 32,
-                backgroundColor: getMemberColor(profile.name) + '20',
-                color: getMemberColor(profile.name),
-                border: `2px solid ${getMemberColor(profile.name)}40`,
-              }}
-            >
-              {profile.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
+            <span data-tour-target="members-btn">
+              <NotificationBell
+                notifications={data.notifications}
+                onRead={readNotification}
+                onReadAll={readAllNotifications}
+                onNavigate={navigateFromNotification}
+              />
             </span>
-            <span className="text-muted-foreground hidden sm:inline">{profile.name}</span>
-            <NotificationBell
-              notifications={data.notifications}
-              onRead={readNotification}
-              onReadAll={readAllNotifications}
-              onNavigate={navigateFromNotification}
+            <UserMenu
+              name={profile.name}
+              isAdmin={isAdmin}
+              onSettings={() => setShowSettings(true)}
+              onHelp={() => tour.openPrompt()}
+              onToggleTheme={toggleTheme}
+              onLogout={logout}
             />
-            <Button variant="ghost" size="icon" onClick={() => tour.openPrompt()} title="Help">
-              <HelpCircle size={14} />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={toggleTheme} title="Switch theme">
-              <Palette size={14} />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={logout} title="Log out">
-              <LogOut size={14} />
-            </Button>
           </div>
         )}
       </div>
