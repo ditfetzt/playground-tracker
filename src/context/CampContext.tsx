@@ -112,7 +112,7 @@ export function CampProvider({ children }: { children: ReactNode }) {
     const old = data.items.find(i => i.id === id)
     await supabase.from('inventory_items').update(changes).eq('id', id)
     if (old && profile) {
-      const changedFields = Object.keys(changes).filter(k => (old as Record<string, unknown>)[k] !== (changes as Record<string, unknown>)[k])
+      const changedFields = Object.keys(changes).filter(k => ((old as unknown) as Record<string, unknown>)[k] !== ((changes as unknown) as Record<string, unknown>)[k])
       await notifyItemUpdated(old, data.profiles, data.roles, profile.id, changedFields)
     }
     await refresh()
@@ -131,7 +131,7 @@ export function CampProvider({ children }: { children: ReactNode }) {
     const old = data.roles.find(r => r.id === id)
     await supabase.from('roles').update(changes).eq('id', id)
     if (old && profile) {
-      const changedFields = Object.keys(changes).filter(k => (old as Record<string, unknown>)[k] !== (changes as Record<string, unknown>)[k])
+      const changedFields = Object.keys(changes).filter(k => ((old as unknown) as Record<string, unknown>)[k] !== ((changes as unknown) as Record<string, unknown>)[k])
       await notifyRoleUpdated(old, data.profiles, profile.id, changedFields)
     }
     await refresh()
@@ -159,7 +159,7 @@ export function CampProvider({ children }: { children: ReactNode }) {
     const old = data.profiles.find(p => p.id === id)
     await supabase.from('profiles').update(changes).eq('id', id)
     if (old && profile) {
-      const changedFields = Object.keys(changes).filter(k => (old as Record<string, unknown>)[k] !== (changes as Record<string, unknown>)[k])
+      const changedFields = Object.keys(changes).filter(k => ((old as unknown) as Record<string, unknown>)[k] !== ((changes as unknown) as Record<string, unknown>)[k])
       await notifyMemberUpdated({ ...old, ...changes }, data.profiles, profile.id, changedFields)
     }
     await refresh()
