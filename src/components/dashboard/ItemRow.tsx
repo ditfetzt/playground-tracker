@@ -123,7 +123,7 @@ export function ItemRow({ item, canEdit, onCycleStatus, onDelete, onUpdate, isFi
 
   return (
     <>
-    <div className="flex flex-col sm:grid sm:grid-cols-[60px_1fr_60px_40px_40px_1fr_30px] gap-1 sm:gap-1.5 px-2 py-2 rounded-lg hover:bg-secondary/50 transition-colors items-start sm:items-center group">
+    <div id={`item-row-${item.id}`} className="flex flex-col sm:grid sm:grid-cols-[60px_1fr_60px_40px_40px_1fr_30px] gap-1 sm:gap-1.5 px-2 py-2 rounded-lg hover:bg-secondary/50 transition-colors items-start sm:items-center group">
       {/* Mobile: status + name + actions in one row */}
       <div className="flex items-center gap-2 w-full sm:hidden">
         <span data-tour-target={isFirstItem ? 'status-badge' : undefined}>

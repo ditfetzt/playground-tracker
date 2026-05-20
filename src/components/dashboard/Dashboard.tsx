@@ -13,6 +13,7 @@ import { MyRolesPanel } from './MyRolesPanel'
 import { CampOverview } from './CampOverview'
 import { TabBar } from './TabBar'
 import { CampSettings } from './CampSettings'
+import { NotificationBell } from './NotificationBell'
 import { TourProvider, useTour } from '../tour'
 import { TourOverlay } from '../tour/TourOverlay'
 import { OnboardingPrompt } from '../OnboardingPrompt'
@@ -37,7 +38,7 @@ function playRandomSound() {
 
 function DashboardContent() {
   const { profile, logout } = useAuth()
-  const { data, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, updateProfile, deleteProfile, addItemComment, deleteItemComment, loading } = useCamp()
+  const { data, addItem, updateItem, deleteItem, updateRole, toggleFeePaid, addProfile, updateProfile, deleteProfile, addItemComment, deleteItemComment, readNotification, readAllNotifications, loading } = useCamp()
   const tour = useTour()
 
   const isAdmin = profile?.is_admin === true
@@ -57,6 +58,30 @@ function DashboardContent() {
   const visibleItems = allItems.filter(i => i.assigned_role)
   const activeProfiles = uniqueBy(data.profiles, p => p.id).filter(p => p.active)
   const visibleRoles = uniqueBy(data.roles, r => r.name).filter(r => !HIDDEN_ROLE_NAMES.includes(r.name))
+
+  const navigateFromNotification = (linkTo: string | null) => {
+    if (!linkTo) return
+    const [kind, id] = linkTo.split(':')
+    if (kind === 'item' && id) {
+      const item = allItems.find(i => i.id === id)
+      if (item) {
+        setActiveTab('my')
+        setExpandedRole(item.assigned_role)
+        setTimeout(() => {
+          const el = document.getElementById(`item-row-${id}`)
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }, 300)
+      }
+    } else if (kind === 'role' && id) {
+      const role = visibleRoles.find(r => r.id === id)
+      if (role) {
+        setActiveTab('my')
+        setExpandedRole(role.name)
+      }
+    } else if (kind === 'member' && id) {
+      if (isAdmin) setShowSettings(true)
+    }
+  }
 
   const myRoleNames = profile?.role_names || []
   const myRoles = isAdmin ? visibleRoles : visibleRoles.filter(r => myRoleNames.includes(r.name))
@@ -220,7 +245,7 @@ function DashboardContent() {
     <div className="flex items-center justify-between mb-4" data-tour-target="header">
       <div>
         <h1 className="text-lg font-bold rainbow-text">The Playground</h1>
-        <p className="text-[13px] font-bold tracking-widest text-muted-foreground">OTHERWORLD 2026 — MOIST.</p>
+        <p className="text-[13px] font-bold tracking-widest text-muted-foreground">OTHERWORLD 2026</p>
       </div>
       <div className="flex items-center gap-2">
         {profile && (
@@ -245,6 +270,12 @@ function DashboardContent() {
               {profile.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
             </span>
             <span className="text-muted-foreground hidden sm:inline">{profile.name}</span>
+            <NotificationBell
+              notifications={data.notifications}
+              onRead={readNotification}
+              onReadAll={readAllNotifications}
+              onNavigate={navigateFromNotification}
+            />
             <Button variant="ghost" size="icon" onClick={() => tour.openPrompt()} title="Help">
               <HelpCircle size={14} />
             </Button>

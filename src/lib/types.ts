@@ -110,6 +110,30 @@ export interface ActivityLogEntry {
   created_at: string
 }
 
+export type NotificationType =
+  | 'item_created'
+  | 'item_updated'
+  | 'item_deleted'
+  | 'comment_added'
+  | 'role_updated'
+  | 'member_joined'
+  | 'member_updated'
+  | 'member_deactivated'
+  | 'fee_toggled'
+
+export interface Notification {
+  id: string
+  recipient_id: string
+  type: NotificationType
+  title: string
+  body: string | null
+  link_to: string | null
+  related_id: string | null
+  related_table: string | null
+  read_at: string | null
+  created_at: string
+}
+
 export interface CampData {
   roles: Role[]
   items: InventoryItem[]
@@ -120,4 +144,5 @@ export interface CampData {
   activityLog: ActivityLogEntry[]
   profiles: Profile[]
   itemComments: ItemComment[]
+  notifications: Notification[]
 }

@@ -64,14 +64,25 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   }, [])
 
   useEffect(() => {
-    if (editingId && nameInputRef.current) {
-      // Small delay to let the keyboard open and layout settle on mobile
-      const t = setTimeout(() => {
-        nameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        nameInputRef.current?.focus()
-      }, 100)
-      return () => clearTimeout(t)
+    if (!editingId || !nameInputRef.current) return
+    const input = nameInputRef.current
+
+    // Wait for iOS keyboard to finish opening, then scroll the active element into view
+    const doScroll = () => {
+      const vv = window.visualViewport
+      if (vv) {
+        // Calculate element position relative to the visual viewport
+        const rect = input.getBoundingClientRect()
+        const targetY = rect.top + vv.offsetTop - vv.height * 0.35
+        window.scrollTo({ top: targetY + window.scrollY, behavior: 'smooth' })
+      } else {
+        input.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+      input.focus()
     }
+
+    const t = setTimeout(doScroll, 350)
+    return () => clearTimeout(t)
   }, [editingId])
 
   const startEditing = (m: Profile) => {
@@ -129,7 +140,7 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
 
   return (
     <>
-    <div className="h-[calc(100vh-2rem)] flex flex-col max-w-4xl mx-auto p-4">
+    <div className="h-[calc(100dvh-2rem)] flex flex-col max-w-4xl mx-auto p-4">
       <div className="flex items-center gap-2 mb-3 shrink-0">
         <Button variant="ghost" size="icon" onClick={onBack}>
           <ArrowLeft size={16} />
@@ -189,16 +200,22 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
                               ref={nameInputRef}
                               value={editName}
                               onChange={e => setEditName(e.target.value)}
-                              className="h-5 text-[11px] py-0 flex-1 min-w-0"
+                              className="h-7 text-base py-0 flex-1 min-w-0"
                               placeholder="Name"
+                              inputMode="text"
+                              autoComplete="off"
+                              autoCorrect="off"
                             />
                           </div>
                           <div className="flex items-center gap-1">
                             <Input
                               value={editInviteCode}
                               onChange={e => setEditInviteCode(e.target.value)}
-                              className="h-5 text-[11px] py-0 flex-1 min-w-0 font-mono"
+                              className="h-7 text-base py-0 flex-1 min-w-0 font-mono"
                               placeholder="Invite code"
+                              inputMode="text"
+                              autoComplete="off"
+                              autoCorrect="off"
                             />
                             <Button type="submit" size="sm" className="h-5 text-[10px] px-1.5" disabled={!editName.trim()}>Save</Button>
                             <Button type="button" variant="ghost" size="sm" className="h-5 text-[10px] px-1.5" onClick={cancelEdit}>Cancel</Button>
