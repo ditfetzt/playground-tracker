@@ -64,7 +64,14 @@ export function CampSettings({ members, onAdd, onUpdate, onDelete, onBack, curre
   }, [])
 
   useEffect(() => {
-    if (editingId) nameInputRef.current?.focus()
+    if (editingId && nameInputRef.current) {
+      // Small delay to let the keyboard open and layout settle on mobile
+      const t = setTimeout(() => {
+        nameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        nameInputRef.current?.focus()
+      }, 100)
+      return () => clearTimeout(t)
+    }
   }, [editingId])
 
   const startEditing = (m: Profile) => {

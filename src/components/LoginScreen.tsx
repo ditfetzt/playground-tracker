@@ -26,7 +26,7 @@ export function LoginScreen() {
     <div className="min-h-screen flex items-center justify-center p-6">
       <div className="glass-card rounded-2xl p-10 max-w-sm w-full text-center">
         <h1 className="text-2xl font-bold rainbow-text mb-1">The Playground</h1>
-        <p className="text-[13px] font-bold tracking-widest text-muted-foreground mb-6">OTHERWORLD 2026 — MOIST.</p>
+        <p className="text-[13px] font-bold tracking-widest text-muted-foreground mb-6">OTHERWORLD 2026</p>
         <p className="text-sm text-muted-foreground mb-5">Enter your invite code</p>
 
         <form onSubmit={handleSubmit} className="space-y-3">
